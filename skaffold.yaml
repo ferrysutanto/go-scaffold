@@ -1,0 +1,14 @@
+apiVersion: skaffold/v4beta5
+kind: Config
+metadata:
+  name: go-app
+build:
+  artifacts:
+  - image: go-app-rest-api
+    buildpacks:
+      env:
+      - GOPROXY={{.GOPROXY}}
+  local: {}
+manifests:
+  rawYaml:
+    - exec/rest/app.yaml
