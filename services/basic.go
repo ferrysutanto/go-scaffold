@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"context"
@@ -9,13 +9,13 @@ import (
 )
 
 type basicService struct {
-	models    models.Models
-	validator *validator.Validate
+	m models.Model
+	v *validator.Validate
 }
 
 func newBasicService(ctx context.Context, conf Config) (*basicService, error) {
 	resp := &basicService{
-		validator: validator.New(),
+		v: validator.New(),
 	}
 
 	if conf.DB != nil {
@@ -41,9 +41,9 @@ func newBasicService(ctx context.Context, conf Config) (*basicService, error) {
 
 		modelsProvider, err := models.New(ctx, mpConf)
 		if err != nil {
-			return nil, errors.Wrap(err, "[service] failed to create models pg provider")
+			return nil, errors.Wrap(err, "[services][newBasicService] failed to create models pg provider")
 		}
-		resp.models = modelsProvider
+		resp.m = modelsProvider
 	}
 
 	return resp, nil

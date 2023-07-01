@@ -1,22 +1,22 @@
-package handler
+package handlers
 
 import (
 	"context"
 	"net/http"
 
-	"github.com/ferrysutanto/go-scaffold/service"
+	"github.com/ferrysutanto/go-scaffold/services"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 )
 
 type basicHandler struct {
-	serviceProvider service.Service
+	serviceProvider services.Service
 }
 
 func newBasicHandler(ctx context.Context, conf Config) (*basicHandler, error) {
-	svcPvdr, err := service.New(ctx, service.Config{
-		Type: service.BASIC_SERVICE,
-		DB: &service.DbObject{
+	svcPvdr, err := services.New(ctx, services.Config{
+		Type: services.BASIC_SERVICE,
+		DB: &services.DbObject{
 			DriverName:            conf.DbDriverName,
 			DbHost:                conf.DbHost,
 			DbPort:                conf.DbPort,
@@ -33,7 +33,7 @@ func newBasicHandler(ctx context.Context, conf Config) (*basicHandler, error) {
 		},
 	})
 	if err != nil {
-		return nil, errors.Wrap(err, "[handler] failed to create service")
+		return nil, errors.Wrap(err, "[handlers][newBasicHandler] failed to create service")
 	}
 
 	resp := &basicHandler{

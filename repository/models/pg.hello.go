@@ -1,5 +1,5 @@
 package models
 
-func (*pgModels) Hello() error {
+func (*pgModel) Hello() error {
 	return nil
 }

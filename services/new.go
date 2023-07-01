@@ -1,9 +1,8 @@
-package service
+package services
 
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/pkg/errors"
@@ -11,13 +10,13 @@ import (
 
 func validateConfig(ctx context.Context, conf Config) error {
 	if ctx == nil {
-		return fmt.Errorf("[service] failed to create service: context is nil")
+		return fmt.Errorf("[services][validateConfig] context is required")
 	}
 
 	validator := validator.New()
-	log.Println(conf.DB.DbUsername)
+
 	if err := validator.StructCtx(ctx, conf); err != nil {
-		return errors.Wrap(err, "[service] failed to create service: invalid config")
+		return errors.Wrap(err, "[services][validateConfig] invalid config")
 	}
 
 	return nil
@@ -25,13 +24,13 @@ func validateConfig(ctx context.Context, conf Config) error {
 
 func New(ctx context.Context, conf Config) (Service, error) {
 	if err := validateConfig(ctx, conf); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "[services][New] failed on validating config")
 	}
 
 	switch conf.Type {
 	case BASIC_SERVICE:
 		return newBasicService(ctx, conf)
 	default:
-		return nil, errors.New("[service] failed to create service: unknown service type")
+		return nil, fmt.Errorf("[services][New] unknown service type: %s", conf.Type)
 	}
 }

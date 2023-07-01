@@ -2,7 +2,7 @@ package models
 
 import "database/sql"
 
-type Models interface {
+type Model interface {
 	Hello() error
 }
 

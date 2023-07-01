@@ -1,7 +1,7 @@
-package handler
+package handlers
 
 import (
-	"github.com/ferrysutanto/go-scaffold/service"
+	"github.com/ferrysutanto/go-scaffold/services"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )
@@ -18,7 +18,7 @@ const (
 
 type Config struct {
 	Type            ProviderType
-	ServiceProvider service.Service
+	ServiceProvider services.Service
 
 	DB            *sqlx.DB
 	ReplicationDB *sqlx.DB

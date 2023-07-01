@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"context"
@@ -14,12 +14,12 @@ var (
 func InitDefaultService(ctx context.Context, conf Config) error {
 	var err error
 	if isDefaultInit {
-		return errors.New("[service] default service already initialized")
+		return errors.New("[services][InitDefaultService] default service already initialized")
 	}
 
 	def, err = New(ctx, conf)
 	if err != nil {
-		return errors.Wrap(err, "[service] failed to init default service")
+		return errors.Wrap(err, "[services][InitDefaultService] failed to init default service")
 	}
 
 	return nil

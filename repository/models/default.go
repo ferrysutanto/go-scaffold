@@ -7,19 +7,19 @@ import (
 )
 
 var (
-	def           Models = &emptyModel{}
+	def           Model = &emptyModel{}
 	isDefaultInit bool
 )
 
 func InitDefaultModel(ctx context.Context, conf Config) error {
 	var err error
 	if isDefaultInit {
-		return errors.New("[models] default model already initialized")
+		return errors.New("[models][InitDefaultModel] default model already initialized")
 	}
 
 	def, err = New(ctx, conf)
 	if err != nil {
-		return errors.Wrap(err, "[models] failed to init default model")
+		return errors.Wrap(err, "[models][InitDefaultModel] failed to init default model")
 	}
 
 	return nil

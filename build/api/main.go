@@ -11,7 +11,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ferrysutanto/go-scaffold/build/api/handler"
+	handler "github.com/ferrysutanto/go-scaffold/build/api/handlers"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
