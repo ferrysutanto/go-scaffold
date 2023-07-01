@@ -10,7 +10,7 @@ import (
 )
 
 type basicHandler struct {
-	serviceProvider services.Service
+	s services.Service
 }
 
 func newBasicHandler(ctx context.Context, conf Config) (*basicHandler, error) {
@@ -37,12 +37,12 @@ func newBasicHandler(ctx context.Context, conf Config) (*basicHandler, error) {
 	}
 
 	resp := &basicHandler{
-		serviceProvider: svcPvdr,
+		s: svcPvdr,
 	}
 
 	return resp, nil
 }
 
-func (provider *basicHandler) Healthcheck(c *gin.Context) {
+func (h *basicHandler) Healthcheck(c *gin.Context) {
 	c.JSON(http.StatusOK, HealthcheckResponse{Status: "OK"})
 }

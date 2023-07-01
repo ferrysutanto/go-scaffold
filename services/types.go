@@ -7,7 +7,7 @@ type Service interface {
 }
 
 type Config struct {
-	Type Type      `json:"type" yaml:"type" env:"PROVIDER_TYPE" validate:"required"`
+	Type Type      `json:"type" yaml:"type" env:"SERVICE_TYPE" validate:"required"`
 	DB   *DbObject `validate:"required"`
 }
 

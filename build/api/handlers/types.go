@@ -10,15 +10,15 @@ type Handler interface {
 	Healthcheck(c *gin.Context)
 }
 
-type ProviderType string
+type HandlerType string
 
 const (
-	ProviderTypeBasic ProviderType = "basic"
+	TypeBasic HandlerType = "basic"
 )
 
 type Config struct {
-	Type            ProviderType
-	ServiceProvider services.Service
+	Type    HandlerType
+	Service services.Service
 
 	DB            *sqlx.DB
 	ReplicationDB *sqlx.DB

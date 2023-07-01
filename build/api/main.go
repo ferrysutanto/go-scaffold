@@ -113,7 +113,7 @@ func main() {
 	defer cancelFunc()
 
 	handlerConfig := handler.Config{
-		Type:                  handler.ProviderTypeBasic,
+		Type:                  handler.TypeBasic,
 		DbDriverName:          mainDbConfig.driver,
 		DbHost:                mainDbConfig.host,
 		DbPort:                mainDbConfig.port,
