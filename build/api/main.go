@@ -129,7 +129,7 @@ func main() {
 		ReplicationDbSSLMode:  replicaDbConfig.sslMode,
 	}
 
-	if err := handler.InitDefaultHandler(ctx, handlerConfig); err != nil {
+	if err := handler.Init(ctx, handlerConfig); err != nil {
 		fmt.Printf("%+v\n", err)
 		log.Println("====================================")
 		log.Fatal(err)
