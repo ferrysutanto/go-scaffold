@@ -10,5 +10,5 @@ func New(ctx context.Context, conf Config) (Handler, error) {
 		return newBasicHandler(ctx, conf)
 	}
 
-	return nil, errors.New("[handler] failed to create handler: unknown handler type")
+	return nil, errors.New("[handlers][New] unknown handler type")
 }

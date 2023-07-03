@@ -4,17 +4,18 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	handler "github.com/ferrysutanto/go-scaffold/build/api/handlers"
+	"github.com/ferrysutanto/go-scaffold/build/api/handlers"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type dbConfig struct {
@@ -29,7 +30,7 @@ type dbConfig struct {
 }
 
 var (
-	hdlr handler.Handler
+	hdlr handlers.Handler
 
 	// db configs
 	mainDbConfig    dbConfig
@@ -112,8 +113,8 @@ func main() {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelFunc()
 
-	handlerConfig := handler.Config{
-		Type:                  handler.TypeBasic,
+	handlerConfig := handlers.Config{
+		Type:                  handlers.TypeBasic,
 		DbDriverName:          mainDbConfig.driver,
 		DbHost:                mainDbConfig.host,
 		DbPort:                mainDbConfig.port,
@@ -129,16 +130,13 @@ func main() {
 		ReplicationDbSSLMode:  replicaDbConfig.sslMode,
 	}
 
-	if err := handler.Init(ctx, handlerConfig); err != nil {
-		fmt.Printf("%+v\n", err)
-		log.Println("====================================")
+	if err := handlers.Init(ctx, handlerConfig); err != nil {
 		log.Fatal(err)
 	}
 
 	r := gin.Default()
-	// r.Use(middleware.CircuitBreakerMiddleware())
 
-	r.GET("/ping", handler.Healthcheck)
+	r.GET("/ping", handlers.Healthcheck)
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf("%s%s", host, port),
