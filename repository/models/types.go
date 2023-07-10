@@ -1,9 +1,12 @@
 package models
 
-import "database/sql"
+import (
+	"context"
+	"database/sql"
+)
 
 type Model interface {
-	Hello() error
+	Ping(context.Context) error
 }
 
 type Config struct {

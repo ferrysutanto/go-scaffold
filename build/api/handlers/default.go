@@ -10,7 +10,7 @@ import (
 var isDefaultInit bool
 var def Handler = &emptyHandler{}
 
-func Init(ctx context.Context, conf Config) error {
+func Init(ctx context.Context, conf *Config) error {
 	if isDefaultInit {
 		return errors.New("[handlers][Init] default handler already initialized")
 	}

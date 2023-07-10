@@ -11,7 +11,7 @@ var (
 	isDefaultInit bool
 )
 
-func Init(ctx context.Context, conf Config) error {
+func Init(ctx context.Context, conf *Config) error {
 	var err error
 	if isDefaultInit {
 		return errors.New("[services][Init] default service already initialized")
@@ -27,6 +27,6 @@ func Init(ctx context.Context, conf Config) error {
 	return nil
 }
 
-func Hello() error {
-	return def.Hello()
+func Healthcheck(ctx context.Context) error {
+	return def.Healthcheck(ctx)
 }

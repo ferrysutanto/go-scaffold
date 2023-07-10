@@ -11,7 +11,7 @@ var (
 	isDefaultInit bool
 )
 
-func Init(ctx context.Context, conf Config) error {
+func Init(ctx context.Context, conf *Config) error {
 	var err error
 	if isDefaultInit {
 		return errors.New("[models][Init] default model already initialized")

@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func validateConfig(ctx context.Context, conf Config) error {
+func validateConfig(ctx context.Context, conf *Config) error {
 	if ctx == nil {
 		return fmt.Errorf("[services][validateConfig] context is required")
 	}
@@ -22,7 +22,7 @@ func validateConfig(ctx context.Context, conf Config) error {
 	return nil
 }
 
-func New(ctx context.Context, conf Config) (Service, error) {
+func New(ctx context.Context, conf *Config) (Service, error) {
 	if err := validateConfig(ctx, conf); err != nil {
 		return nil, errors.Wrap(err, "[services][New] failed on validating config")
 	}

@@ -1,9 +1,13 @@
 package services
 
-import "github.com/pkg/errors"
+import (
+	"context"
+
+	"github.com/pkg/errors"
+)
 
 type emptyService struct{}
 
-func (*emptyService) Hello() error {
-	return errors.New("[services][emptyService] Hello is not implemented")
+func (*emptyService) Healthcheck(ctx context.Context) error {
+	return errors.New("[services][emptyService][Healthcheck] function is not implemented")
 }

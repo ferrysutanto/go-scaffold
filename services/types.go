@@ -1,9 +1,12 @@
 package services
 
-import "database/sql"
+import (
+	"context"
+	"database/sql"
+)
 
 type Service interface {
-	Hello() error
+	Healthcheck(ctx context.Context) error
 }
 
 type Config struct {

@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func validateConfig(ctx context.Context, conf Config) error {
+func validateConfig(ctx context.Context, conf *Config) error {
 	v := validator.New()
 
 	if err := v.StructCtx(ctx, conf); err != nil {
@@ -18,7 +18,7 @@ func validateConfig(ctx context.Context, conf Config) error {
 	return nil
 }
 
-func New(ctx context.Context, conf Config) (Model, error) {
+func New(ctx context.Context, conf *Config) (Model, error) {
 	if err := validateConfig(ctx, conf); err != nil {
 		return nil, errors.Wrap(err, "[models][New] failed on validating config")
 	}

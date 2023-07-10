@@ -2,10 +2,8 @@ package handlers
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/ferrysutanto/go-scaffold/services"
-	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 )
 
@@ -13,8 +11,8 @@ type basicHandler struct {
 	s services.Service
 }
 
-func newBasicHandler(ctx context.Context, conf Config) (*basicHandler, error) {
-	svcPvdr, err := services.New(ctx, services.Config{
+func newBasicHandler(ctx context.Context, conf *Config) (*basicHandler, error) {
+	svcPvdr, err := services.New(ctx, &services.Config{
 		Type: services.BASIC_SERVICE,
 		DB: &services.DbObject{
 			DriverName:            conf.DbDriverName,
@@ -41,8 +39,4 @@ func newBasicHandler(ctx context.Context, conf Config) (*basicHandler, error) {
 	}
 
 	return resp, nil
-}
-
-func (h *basicHandler) Healthcheck(c *gin.Context) {
-	c.JSON(http.StatusOK, HealthcheckResponse{Status: "OK"})
 }

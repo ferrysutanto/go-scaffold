@@ -1,9 +1,13 @@
 package models
 
-import "github.com/pkg/errors"
+import (
+	"context"
+
+	"github.com/pkg/errors"
+)
 
 type emptyModel struct{}
 
-func (*emptyModel) Hello() error {
-	return errors.New("[models][emptyModel][Hello] function is not implemented")
+func (*emptyModel) Ping(context.Context) error {
+	return errors.New("[models][emptyModel][Ping] function is not implemented")
 }

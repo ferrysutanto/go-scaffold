@@ -5,7 +5,7 @@ import (
 	"errors"
 )
 
-func New(ctx context.Context, conf Config) (Handler, error) {
+func New(ctx context.Context, conf *Config) (Handler, error) {
 	if conf.Type == TypeBasic {
 		return newBasicHandler(ctx, conf)
 	}

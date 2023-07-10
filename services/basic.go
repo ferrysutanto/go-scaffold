@@ -13,7 +13,7 @@ type basicService struct {
 	v *validator.Validate
 }
 
-func newBasicService(ctx context.Context, conf Config) (*basicService, error) {
+func newBasicService(ctx context.Context, conf *Config) (*basicService, error) {
 	resp := &basicService{
 		v: validator.New(),
 	}
@@ -39,7 +39,7 @@ func newBasicService(ctx context.Context, conf Config) (*basicService, error) {
 			ReplicationDbSSLMode:  conf.DB.ReplicationDbSSLMode,
 		}
 
-		m, err := models.New(ctx, mpConf)
+		m, err := models.New(ctx, &mpConf)
 		if err != nil {
 			return nil, errors.Wrap(err, "[services][newBasicService] failed to create models")
 		}

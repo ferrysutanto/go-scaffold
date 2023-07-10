@@ -4,6 +4,7 @@ import (
 	"github.com/ferrysutanto/go-scaffold/services"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
 )
 
 type Handler interface {
@@ -54,3 +55,5 @@ type PageInfo struct {
 	TotalRecord int  `json:"total_record"`
 	TotalPage   *int `json:"total_page,omitempty"`
 }
+
+var err500 = errors.New("internal server error. please try again later")

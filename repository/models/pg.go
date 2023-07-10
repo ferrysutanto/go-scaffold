@@ -14,11 +14,12 @@ import (
 )
 
 type pgModel struct {
-	db        *sqlx.DB
-	validator *validator.Validate
+	db     *sqlx.DB
+	replDb *sqlx.DB
+	v      *validator.Validate
 }
 
-func newPgModel(ctx context.Context, conf Config) (*pgModel, error) {
+func newPgModel(ctx context.Context, conf *Config) (*pgModel, error) {
 	var db *sqlx.DB
 	if conf.DB != nil {
 		db = sqlx.NewDb(conf.DB, "postgres")
@@ -34,9 +35,24 @@ func newPgModel(ctx context.Context, conf Config) (*pgModel, error) {
 		}
 	}
 
+	var replDb *sqlx.DB
+	if conf.ReplicationDB != nil {
+		replDb = sqlx.NewDb(conf.ReplicationDB, "postgres")
+		if err := replDb.Ping(); err != nil {
+			return nil, errors.Wrap(err, "[models][newPgModel] failed to ping replication db")
+		}
+	} else {
+		var err error
+		replDb, err = sqlx.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%v", conf.ReplicationDbHost, conf.ReplicationDbPort, conf.ReplicationDbUsername, conf.ReplicationDbPassword, conf.ReplicationDbName, conf.ReplicationDbSSLMode))
+		if err != nil {
+			return nil, errors.Wrap(err, "[models][newPgModel] failed to open replication db")
+		}
+	}
+
 	resp := &pgModel{
-		db:        db,
-		validator: validator.New(),
+		db:     db,
+		replDb: replDb,
+		v:      validator.New(),
 	}
 
 	return resp, nil
