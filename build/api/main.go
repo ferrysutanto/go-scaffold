@@ -59,11 +59,11 @@ var (
 func validate(ctx context.Context) error {
 	// validate db configs
 	if err := vldtr.StructCtx(ctx, mainDbConfig); err != nil {
-		return fmt.Errorf("[500] failed to validate main db config: %v", err)
+		return fmt.Errorf("[api] failed to validate main db config: %v", err)
 	}
 
 	if err := vldtr.StructCtx(ctx, replicaDbConfig); err != nil {
-		return fmt.Errorf("[500] failed to validate replica db config: %v", err)
+		return fmt.Errorf("[api] failed to validate replica db config: %v", err)
 	}
 
 	return nil

@@ -9,5 +9,5 @@ import (
 type emptyHandler struct{}
 
 func (p *emptyHandler) Healthcheck(c *gin.Context) {
-	c.JSON(http.StatusInternalServerError, gin.H{"error": "not implemented"})
+	c.JSON(http.StatusNotImplemented, gin.H{"error": "not implemented"})
 }
