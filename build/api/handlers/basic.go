@@ -12,7 +12,7 @@ type basicHandler struct {
 }
 
 func newBasicHandler(ctx context.Context, conf *Config) (*basicHandler, error) {
-	svcPvdr, err := services.New(ctx, &services.Config{
+	s, err := services.New(ctx, &services.Config{
 		Type: services.BASIC_SERVICE,
 		DB: &services.DbObject{
 			DriverName:            conf.DbDriverName,
@@ -35,7 +35,7 @@ func newBasicHandler(ctx context.Context, conf *Config) (*basicHandler, error) {
 	}
 
 	resp := &basicHandler{
-		s: svcPvdr,
+		s,
 	}
 
 	return resp, nil

@@ -11,8 +11,9 @@ import (
 	"time"
 
 	"github.com/ferrysutanto/go-scaffold/build/api/handlers"
+	"github.com/ferrysutanto/go-scaffold/build/api/middlewares"
+	"github.com/ferrysutanto/go-scaffold/utils"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 
 	log "github.com/sirupsen/logrus"
@@ -52,17 +53,15 @@ var (
 	shutdownDoneChan = make(chan bool, 1)
 	// server shutdown error
 	shutdownErrorChan = make(chan error, 1)
-
-	vldtr = validator.New()
 )
 
 func validate(ctx context.Context) error {
 	// validate db configs
-	if err := vldtr.StructCtx(ctx, mainDbConfig); err != nil {
+	if err := utils.StructCtx(ctx, mainDbConfig); err != nil {
 		return fmt.Errorf("[api] failed to validate main db config: %v", err)
 	}
 
-	if err := vldtr.StructCtx(ctx, replicaDbConfig); err != nil {
+	if err := utils.StructCtx(ctx, replicaDbConfig); err != nil {
 		return fmt.Errorf("[api] failed to validate replica db config: %v", err)
 	}
 
@@ -114,7 +113,7 @@ func main() {
 	defer cancelFunc()
 
 	handlerConfig := handlers.Config{
-		Type:                  handlers.TypeBasic,
+		Type:                  handlers.TypeBasic, // handlers.TypeBasic for default
 		DbDriverName:          mainDbConfig.driver,
 		DbHost:                mainDbConfig.host,
 		DbPort:                mainDbConfig.port,
@@ -135,6 +134,8 @@ func main() {
 	}
 
 	r := gin.Default()
+
+	r.Use(middlewares.RequestIdMiddleware)
 
 	r.GET("/ping", handlers.Healthcheck)
 

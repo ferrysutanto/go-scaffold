@@ -4,7 +4,6 @@ import (
 	"github.com/ferrysutanto/go-scaffold/services"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
-	"github.com/pkg/errors"
 )
 
 type Handler interface {
@@ -46,7 +45,8 @@ type HealthcheckResponse struct {
 }
 
 type GenericResponse struct {
-	Status string `json:"status" example:"OK"`
+	Status *string  `json:"status,omitempty" yaml:"status,omitempty" example:"OK"`
+	Errors []string `json:"errors,omitempty" yaml:"errors,omitempty" example:"[\"error1\", \"error2\"]"`
 }
 
 type PageInfo struct {
@@ -55,5 +55,3 @@ type PageInfo struct {
 	TotalRecord int  `json:"total_record"`
 	TotalPage   *int `json:"total_page,omitempty"`
 }
-
-var err500 = errors.New("internal server error. please try again later")

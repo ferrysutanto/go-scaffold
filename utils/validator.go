@@ -31,7 +31,7 @@ func init() {
 
 func StructCtx(ctx context.Context, s interface{}) error {
 	if err := vldtr.StructCtx(ctx, s); err != nil {
-		return errors.New(strings.Join(translateValidationErrors(err), ", "))
+		return errors.New(strings.Join(translateValidationErrors(err), "\n"))
 	}
 
 	return nil
@@ -66,6 +66,8 @@ func formatError(fe validator.FieldError) string {
 		return fmt.Sprintf("Field '%s' is required if '%s' is not present", jsonName, jsonParam)
 	case "required_with":
 		return fmt.Sprintf("Field '%s' is required along with '%s'", jsonName, jsonParam)
+	case "oneof":
+		return fmt.Sprintf("Field '%s' should be one of '%s'", jsonName, jsonParam)
 	}
 
 	return fe.Error()
