@@ -1,15 +1,24 @@
-FROM golang:latest
+# Stage 1: Build the Go binary
+FROM golang:alpine AS builder
 
 WORKDIR /app
 
-COPY . /app
+# Copy the Go module files and download dependencies
+COPY . .
+RUN go mod download
 
-RUN go build -o go-app-rest-api
+# Build the Go binary for arm64
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o ./api ./build/api/main.go
 
-CMD ["./go-app-rest-api"]
+# Stage 2: Create the final Docker image
+FROM alpine:latest
 
-ARG PORT=8080
-ENV PORT=$PORT
-EXPOSE $PORT
+WORKDIR /app
 
-ENV NAME=go-app-rest-api
+# Copy the Go binary from the builder stage
+COPY --from=builder /app/api /app/
+
+# Set any other necessary configurations or dependencies
+
+# Set the binary as the entrypoint
+ENTRYPOINT [ "./api" ]

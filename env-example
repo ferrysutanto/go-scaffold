@@ -1,4 +1,7 @@
+APP_NAME=go-scaffold
 APP_PORT=8080
+APP_ENV=development
+APP_DEBUG=true
 
 DB_DRIVER=postgres
 DB_HOST=localhost

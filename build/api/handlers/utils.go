@@ -19,7 +19,7 @@ var (
 	errNoParam  = errors.New(noParamMessage)
 )
 
-func injectAndValidateRequest(c *gin.Context, req interface{}) error {
+func bindAndValidateRequest(c *gin.Context, req interface{}) error {
 	if c.Request.Method == "POST" || c.Request.Method == "PUT" {
 		if err := c.BindJSON(req); err != nil {
 			if err.Error() == "EOF" {
