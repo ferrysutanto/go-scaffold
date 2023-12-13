@@ -24,3 +24,9 @@ build_api_image:
 
 run_api_container:
 	docker run --env-file=.env -p ${DOCKER_API_HOST_PORT}:${APP_PORT} ${DOCKER_API_IMAGE_NAME}
+
+build_cli:
+	go build -o bin/cli build/cli/main.go
+
+run_cli:
+	make build_cli && ./bin/cli
