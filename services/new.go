@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/go-playground/validator/v10"
+	"github.com/ferrysutanto/go-scaffold/utils"
 	"github.com/pkg/errors"
+	"go.opentelemetry.io/otel"
 )
 
 func validateConfig(ctx context.Context, conf *Config) error {
@@ -13,24 +14,34 @@ func validateConfig(ctx context.Context, conf *Config) error {
 		return fmt.Errorf("[services][validateConfig] context is required")
 	}
 
-	validator := validator.New()
+	ctx, span := otel.Tracer("").Start(ctx, "[services][validateConfig]")
+	defer span.End()
 
-	if err := validator.StructCtx(ctx, conf); err != nil {
-		return errors.Wrap(err, "[services][validateConfig] invalid config")
+	if err := utils.StructCtx(ctx, conf); err != nil {
+		return errors.Wrap(err, "[services][validateConfig] invalid config.")
 	}
 
 	return nil
 }
 
+// New creates a new Service instance
 func New(ctx context.Context, conf *Config) (Service, error) {
+	// 1. Validate context
+	if ctx == nil {
+		return nil, errors.New("[services][New] context is required")
+	}
+
+	// 2. Validate config
+	ctx, span := otel.Tracer("").Start(ctx, "[services][New]")
+	defer span.End()
+
+	// 3. Validate config
 	if err := validateConfig(ctx, conf); err != nil {
+		span.RecordError(err)
+
 		return nil, errors.Wrap(err, "[services][New] failed on validating config")
 	}
 
-	switch conf.Type {
-	case BASIC_SERVICE:
-		return newBasicService(ctx, conf)
-	default:
-		return nil, fmt.Errorf("[services][New] unknown service type: %s", conf.Type)
-	}
+	// 4. Create new service
+	return newBasicService(ctx, conf)
 }

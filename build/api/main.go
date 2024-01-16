@@ -3,165 +3,111 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
-	"time"
 
-	"github.com/ferrysutanto/go-scaffold/build/api/handlers"
-	"github.com/ferrysutanto/go-scaffold/build/api/middlewares"
-	"github.com/ferrysutanto/go-scaffold/utils"
-	"github.com/gin-gonic/gin"
+	"github.com/ferrysutanto/go-scaffold/build/api/servers"
+	"github.com/ferrysutanto/go-scaffold/services"
 	"github.com/joho/godotenv"
+	"github.com/pkg/errors"
+	"go.opentelemetry.io/otel"
 
 	log "github.com/sirupsen/logrus"
 )
 
-type dbConfig struct {
-	driver   string        `env:"DB_DRIVER" envDefault:"postgres" validate:"required"`
-	host     string        `env:"DB_HOST" envDefault:"localhost" validate:"required"`
-	port     string        `env:"DB_PORT" envDefault:"5432" validate:"required"`
-	username string        `env:"DB_USERNAME" envDefault:"postgres" validate:"required"`
-	password string        `env:"DB_PASSWORD" envDefault:"postgres" validate:"required"`
-	name     string        `env:"DB_NAME" envDefault:"postgres" validate:"required"`
-	timeout  time.Duration `env:"DB_TIMEOUT" envDefault:"5s" validate:"required"`
-	sslMode  string        `env:"DB_SSL_MODE" envDefault:"disable" validate:"required"`
-}
-
 var (
-	hdlr handlers.Handler
-
-	// db configs
-	mainDbConfig    dbConfig
-	replicaDbConfig dbConfig
-
-	// shutdown timeout
-	shutdownTimeout = 5 * time.Second
-
 	// server config
-	env  = "development"
-	host = "localhost"
-	port = ":8080"
-
-	// server shutdown
-	shutdownChan = make(chan os.Signal, 1)
-	// server shutdown timeout
-	shutdownTimeoutChan = make(chan bool, 1)
-	// server shutdown done
-	shutdownDoneChan = make(chan bool, 1)
-	// server shutdown error
-	shutdownErrorChan = make(chan error, 1)
+	host    = "localhost"
+	port    = 8080
+	appName = "go-scaffold"
 )
 
-func validate(ctx context.Context) error {
-	// validate db configs
-	if err := utils.StructCtx(ctx, mainDbConfig); err != nil {
-		return fmt.Errorf("[api] failed to validate main db config: %v", err)
+func init() {
+	ctx := context.Background()
+
+	// Load .env file
+	if err := godotenv.Load(); err != nil {
+		log.Printf("[%s] No .env file found...", appName)
 	}
 
-	if err := utils.StructCtx(ctx, replicaDbConfig); err != nil {
-		return fmt.Errorf("[api] failed to validate replica db config: %v", err)
+	if envAppName := os.Getenv("APP_NAME"); envAppName != "" {
+		appName = envAppName
 	}
 
-	return nil
-}
+	if appHost := os.Getenv("APP_HOST"); appHost != "" {
+		host = appHost
+	}
 
-func mapOsEnvToVariables() {
-	// map os env to variables
-	mainDbConfig.driver = os.Getenv("DB_DRIVER")
-	mainDbConfig.host = os.Getenv("DB_HOST")
-	mainDbConfig.port = os.Getenv("DB_PORT")
-	mainDbConfig.username = os.Getenv("DB_USERNAME")
-	mainDbConfig.password = os.Getenv("DB_PASSWORD")
-	mainDbConfig.name = os.Getenv("DB_NAME")
-	mainDbConfig.timeout = 5 * time.Second
-	mainDbConfig.sslMode = os.Getenv("DB_SSL_MODE")
+	if appPort := os.Getenv("APP_PORT"); appPort != "" {
+		p, err := strconv.Atoi(appPort)
+		if err != nil {
+			log.Fatalf("[%s] failed to parse APP_PORT", appName)
+		}
+		port = p
+	}
 
-	replicaDbConfig.host = os.Getenv("DB_HOST")
-	replicaDbConfig.port = os.Getenv("DB_PORT")
-	replicaDbConfig.username = os.Getenv("DB_USERNAME")
-	replicaDbConfig.password = os.Getenv("DB_PASSWORD")
-	replicaDbConfig.name = os.Getenv("DB_NAME")
-	replicaDbConfig.timeout = 5 * time.Second
-	replicaDbConfig.sslMode = os.Getenv("DB_SSL_MODE")
+	if err := services.Init(ctx); err != nil {
+		err = errors.Wrapf(err, "[%s] failed to init services", appName)
+		log.Fatalln(err)
+	}
 }
 
 func main() {
-	godotenv.Load()
+	// 1. init tracer and start a span and defer its closure
+	ctx, span := otel.Tracer("").Start(context.Background(), "[api][main]")
+	defer span.End()
 
-	mapOsEnvToVariables()
-
-	if err := validate(context.Background()); err != nil {
-		log.Fatal(err)
+	// 2. load .env file
+	span.AddEvent("load .env file")
+	if err := godotenv.Load(); err != nil {
+		log.Printf("[%s] No .env file found...", appName)
 	}
 
-	flagHost := flag.String("host", "", "host for the account api server")
-	flagPort := flag.String("port", "", "port for the account api server")
-	flag.Parse()
-
-	if *flagHost != "" {
+	// 3. parse flags
+	// flagHost := ""
+	// flag.StringVar(&flagHost, "host", "", "host for the account api server")
+	span.AddEvent("parse flags")
+	if flagHost := flag.String("host", "", "host for the account api server"); flagHost != nil && *flagHost != "" {
 		host = *flagHost
 	}
-
-	if *flagPort != "" {
+	if flagPort := flag.Int("port", 0, "port for the account api server"); flagPort != nil && *flagPort != 0 {
 		port = *flagPort
 	}
+	flag.Parse()
 
-	ctx, cancelFunc := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelFunc()
-
-	handlerConfig := handlers.Config{
-		Type:                  handlers.TypeBasic, // handlers.TypeBasic for default
-		DbDriverName:          mainDbConfig.driver,
-		DbHost:                mainDbConfig.host,
-		DbPort:                mainDbConfig.port,
-		DbUsername:            mainDbConfig.username,
-		DbPassword:            mainDbConfig.password,
-		DbName:                mainDbConfig.name,
-		DbSSLMode:             mainDbConfig.sslMode,
-		ReplicationDbHost:     replicaDbConfig.host,
-		ReplicationDbPort:     replicaDbConfig.port,
-		ReplicationDbUsername: replicaDbConfig.username,
-		ReplicationDbPassword: replicaDbConfig.password,
-		ReplicationDbName:     replicaDbConfig.name,
-		ReplicationDbSSLMode:  replicaDbConfig.sslMode,
-	}
-
-	if err := handlers.Init(ctx, &handlerConfig); err != nil {
+	log.Printf("[%s] Starting Server at %s:%d", appName, host, port)
+	// 4. create server
+	srv, err := servers.New(ctx, &servers.Config{
+		Host: host,
+		Port: port,
+	})
+	if err != nil {
+		err = errors.Wrapf(err, "[%s] failed to create server", appName)
+		span.RecordError(err)
 		log.Fatal(err)
-	}
-
-	r := gin.Default()
-
-	r.Use(middlewares.RequestIdMiddleware)
-
-	r.GET("/ping", handlers.Healthcheck)
-
-	srv := &http.Server{
-		Addr:    fmt.Sprintf("%s%s", host, port),
-		Handler: r,
 	}
 
 	// Run server
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("[go-app] listen: %s\n", err)
+			err = errors.Wrapf(err, "[%s] failed to listen and serve", appName)
+			span.RecordError(err)
+			log.Fatal(err)
 		}
 	}()
 
-	quit := make(chan os.Signal)
+	// Graceful shutdown
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
-	log.Println(("[go-app] Shutdown Server..."))
+	log.Printf("[%s] Shutting down Server...", appName)
 
-	offCtx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
-	defer cancel()
-	if err := srv.Shutdown(offCtx); err != nil {
-		log.Fatalf("[go-app] Server Shutdown: %v", err)
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatalf("[%s] Server Shutdown: %v", appName, err)
 	}
 
-	log.Println("[go-app] Server exiting")
-
+	log.Printf("[%s] Server exiting", appName)
 }

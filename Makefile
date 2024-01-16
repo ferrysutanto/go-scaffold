@@ -25,8 +25,20 @@ build_api_image:
 run_api_container:
 	docker run --env-file=.env -p ${DOCKER_API_HOST_PORT}:${APP_PORT} ${DOCKER_API_IMAGE_NAME}
 
+run_compose:
+	docker compose --env-file=.env -f .dev/docker-compose.yml up
+
 build_cli:
 	go build -o bin/cli build/cli/main.go
 
 run_cli:
 	make build_cli && ./bin/cli
+
+test:
+	go test -v $(shell go list ./... | grep -v /vendor/) -cover -coverprofile=coverage.out
+
+sonar_scan:
+	sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=. -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_LOGIN} -Dsonar.password=${SONAR_PASSWORD} -Dsonar.go.coverage.reportPaths=coverage.out
+
+test_and_scan:
+	make test && make sonar_scan

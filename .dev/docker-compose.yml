@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: scaffold_dev_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "${DB_PORT}:5432"
+  redis:
+    image: redis:latest
+    container_name: scaffold_dev_redis
+    ports:
+      - "${CACHE_REDIS_PORT}:6379"
+    environment:
+      REDIS_ARGS: "--requirepass password --user ${CACHE_REDIS_USERNAME} on >${CACHE_REDIS_PASSWORD} ~* allcommands --user default off nopass nocommands"
+  sonarqube:
+    image: sonarqube:latest
+    container_name: scaffold_dev_sonarqube
+    environment:
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://postgres:5432/${SONARQUBE_DB}
+      - SONARQUBE_JDBC_USERNAME=${SONARQUBE_JDBC_USER}
+      - SONARQUBE_JDBC_PASSWORD=${SONARQUBE_JDBC_PASSWORD}
+    ports:
+      - "${SONARQUBE_PORT}:9000"
+  jaeger:
+    image: jaegertracing/all-in-one:1.53
+    container_name: scaffold_dev_jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "${JAEGER_UI_PORT}:16686"
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 5778:5778
+      - 4317:4317
+      - 4318:4318
+      - 14250:14250
+      - 14268:14268
+      - 14269:14269
+      - 9411:9411
