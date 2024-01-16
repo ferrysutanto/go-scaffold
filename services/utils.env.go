@@ -10,7 +10,7 @@ import (
 )
 
 type environmentVariables struct {
-	Environment string        `env:"ENVIRONMENT,required"`
+	Environment string        `env:"APP_ENV,required"`
 	DB          *dbConfig     `env:", prefix="`
 	ReplicaDB   *dbConfig     `env:", prefix=REPLICA_"`
 	Cache       *cacheConfig  `env:", prefix=CACHE_"`
@@ -52,7 +52,7 @@ func GenerateEnvironmentVariables(ctx context.Context) (*environmentVariables, e
 		return nil, errors.New("[services][GenerateEnvironmentVariables] context is required")
 	}
 
-	ctx, span := otel.Tracer("").Start(ctx, "services:GenerateEnvironmentVariables")
+	ctx, span := otel.Tracer("").Start(ctx, "[services][GenerateEnvironmentVariables]")
 	defer span.End()
 
 	resp := environmentVariables{}

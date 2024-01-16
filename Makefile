@@ -37,8 +37,11 @@ run_cli:
 test:
 	go test -v $(shell go list ./... | grep -v /vendor/) -cover -coverprofile=coverage.out
 
+docker_sonar_scan:
+	docker run --rm -e SONAR_HOST_URL=${SONAR_HOST_URL} -e SONAR_LOGIN=${SONAR_LOGIN} -e SONAR_PASSWORD=${SONAR_PASSWORD} -e SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY} -v $(shell pwd):/usr/src sonarsource/sonar-scanner-cli
+
 sonar_scan:
 	sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=. -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_LOGIN} -Dsonar.password=${SONAR_PASSWORD} -Dsonar.go.coverage.reportPaths=coverage.out
 
 test_and_scan:
-	make test && make sonar_scan
+	make test && make docker_sonar_scan
