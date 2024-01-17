@@ -10,6 +10,7 @@ import (
 )
 
 type environmentVariables struct {
+	AppName     string        `env:"APP_NAME,required"`
 	Environment string        `env:"APP_ENV,required"`
 	DB          *dbConfig     `env:", prefix="`
 	ReplicaDB   *dbConfig     `env:", prefix=REPLICA_"`

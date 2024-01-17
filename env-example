@@ -1,6 +1,5 @@
-ENVIRONMENT=development
-
 APP_NAME=go-scaffold
+APP_HOST=localhost
 APP_PORT=8080
 APP_ENV=development
 APP_DEBUG=true
@@ -36,6 +35,11 @@ SONARQUBE_PORT=9000
 SONARQUBE_JDBC_USER=sonarqube
 SONARQUBE_JDBC_PASSWORD=sonarqube
 SONARQUBE_DB=sonarqube
+
+SONAR_HOST_URL=http://localhost:9000
+SONAR_LOGIN=admin
+SONAR_PASSWORD=admin
+SONAR_PROJECT_KEY=go-scaffold
 
 # Tracing configuration
 TRACING_ENABLED=true
