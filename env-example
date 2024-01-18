@@ -21,6 +21,14 @@ REPLICA_DB_PASSWORD=postgres
 REPLICA_DB_NAME=postgres
 REPLICA_DB_SSL_MODE=disable
 
+# Redis configuration
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_USERNAME=
+REDIS_PASSWORD=
+REDIS_DB=0
+REDIS_USE_TLS=false
+
 # Cache configuration (redis by default)
 CACHE_DRIVER=redis
 CACHE_HOST=localhost

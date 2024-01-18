@@ -3,3 +3,6 @@
 
 bin/
 tmp/
+.scannerwork/
+
+coverage.out
