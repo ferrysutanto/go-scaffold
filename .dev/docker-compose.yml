@@ -1,6 +1,15 @@
 version: '3.9'
 
 services:
+  dynamodb:
+   command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+   image: "amazon/dynamodb-local:latest"
+   container_name: scaffold_dev_dynamodb
+   ports:
+     - "${DYNAMODB_PORT}:8000"
+   volumes:
+     - "./dynamodb:/home/dynamodblocal/data"
+   working_dir: /home/dynamodblocal
   postgres:
     image: postgres:latest
     container_name: scaffold_dev_postgres

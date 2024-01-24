@@ -58,6 +58,8 @@ func New(ctx context.Context, conf *Config) (DB, error) {
 	case "postgres":
 		return newPgModel(ctx, conf)
 	// 4.b. if db type is not postgres, return error
+	case "dynamodb":
+		return newDdbModel(ctx, conf)
 	default:
 		err := fmt.Errorf("[repositories/db][New] unknown driver name: %s", conf.DriverName)
 		// record error in span

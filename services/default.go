@@ -2,9 +2,11 @@ package services
 
 import (
 	"context"
+	"os"
 	"strconv"
 
 	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -21,6 +23,13 @@ func Init(ctx context.Context) error {
 	env, err := GenerateEnvironmentVariables(ctx)
 	if err != nil {
 		return errors.Wrap(err, "[services][Init] failed to generate environment variables")
+	}
+
+	if isDebug := os.Getenv("APP_DEBUG"); isDebug != "" {
+		env.IsDebug, _ = strconv.ParseBool(isDebug)
+		if env.IsDebug {
+			log.SetLevel(log.DebugLevel)
+		}
 	}
 
 	conf := &Config{

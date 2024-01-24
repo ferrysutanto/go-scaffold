@@ -21,6 +21,9 @@ REPLICA_DB_PASSWORD=postgres
 REPLICA_DB_NAME=postgres
 REPLICA_DB_SSL_MODE=disable
 
+# DynamoDB configuration
+DYNAMODB_PORT=8000
+
 # Redis configuration
 REDIS_HOST=localhost
 REDIS_PORT=6379

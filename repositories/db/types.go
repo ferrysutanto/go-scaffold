@@ -30,4 +30,11 @@ type Config struct {
 	ReplicaDbUsername string  `json:"replica_db_username" yaml:"replica_db_username" env:"REPLICATION_DB_USERNAME" env-default:"postgres" validate:"required_without=ReplicaDB,required_with=ReplicaDbHost,required_with=ReplicaDbPort,required_with=ReplicaDbName,required_with=ReplicaDbPassword,required_with=ReplicaDbSSLMode"`
 	ReplicaDbPassword string  `json:"replica_db_password" yaml:"replica_db_password" env:"REPLICATION_DB_PASSWORD" env-default:"postgres" validate:"required_without=ReplicaDB,required_with=ReplicaDbHost,required_with=ReplicaDbPort,required_with=ReplicaDbName,required_with=ReplicaDbUsername,required_with=ReplicaDbSSLMode"`
 	ReplicaDbSslMode  string  `json:"replica_db_ssl_mode" yaml:"replica_db_ssl_mode" env:"REPLICATION_DB_SSL_MODE" env-default:"disable" validate:"required_without=ReplicaDB,required_with=ReplicaDbHost,required_with=ReplicaDbPort,required_with=ReplicaDbName,required_with=ReplicaDbUsername,required_with=ReplicaDbPassword"`
+
+	AwsAccessKeyID     string
+	AwsSecretAccessKey string
+	AwsSessionToken    string
+	AwsSource          string
+	AwsRegion          string
+	AwsEndpointURL     string
 }
