@@ -18,11 +18,11 @@ type ddbModel struct {
 func (m *ddbModel) Ping(ctx context.Context) error {
 	// 1. check if context is provided
 	if ctx == nil {
-		return errors.New("[repositories/db][Ping] context is nil")
+		return errors.New("[repositories/db][ddbModel:Ping] context is nil")
 	}
 
 	// 2. start span and defer span end
-	ctx, span := otel.Tracer("").Start(ctx, "[repositories/db][Ping]")
+	_, span := otel.Tracer("").Start(ctx, "[repositories/db][ddbModel:Ping]")
 	defer span.End()
 
 	return nil
@@ -30,7 +30,7 @@ func (m *ddbModel) Ping(ctx context.Context) error {
 
 func newDdbModel(ctx context.Context, conf *Config) (*ddbModel, error) {
 	if ctx == nil {
-		return nil, errors.New("[repositories/db][newPgModel] context is nil")
+		return nil, errors.New("[repositories/db][newDdbModel] context is nil")
 	}
 
 	// 2. start span and defer span end
