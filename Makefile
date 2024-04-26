@@ -1,46 +1,46 @@
 include .env
 export $(shell sed 's/=.*//' .env)
 
-create_migration:
+migration_create:
 	migrate create -ext sql -dir .dev/db-migrations/ $(name)
 
-run_migration:
+migration_run:
 	migrate -path .dev/db-migrations/ -database "postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE}" up
 
-drop_migration:
+migration_drop:
 	migrate -path .dev/db-migrations/ -database "postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE}" drop -f
 
-build_api:
+api_build:
 	go build -o bin/api build/api/main.go
 
-run_api:
+api_run:
 	make build_api && ./bin/api
 
-dev_api:
+api_dev:
 	air
 
-build_api_image:
+api_build_image:
 	docker build -t ${DOCKER_API_IMAGE_NAME} -f build/api/Dockerfile .
 
-run_api_container:
+api_run_container:
 	docker run --env-file=.env -p ${DOCKER_API_HOST_PORT}:${APP_PORT} ${DOCKER_API_IMAGE_NAME}
 
-run_compose:
+compose_run:
 	docker compose --env-file=.env -f .dev/docker-compose.yml up
 
-build_cli:
+cli_build:
 	go build -o bin/cli build/cli/main.go
 
-run_cli:
+cli_run:
 	make build_cli && ./bin/cli
 
 test:
 	go test -v $(shell go list ./... | grep -v /vendor/) -cover -coverprofile=coverage.out
 
-docker_sonar_scan:
+scan_docker:
 	docker run --rm -e SONAR_HOST_URL=${SONAR_HOST_URL} -e SONAR_LOGIN=${SONAR_LOGIN} -e SONAR_PASSWORD=${SONAR_PASSWORD} -e SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY} -e SONAR_SCANNER_OPTS="-Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=. -Dsonar.exclusions='**/*_test.go,bin/*,tmp/*' -Dsonar.go.coverage.reportPaths=coverage.out" -v $(shell pwd):/usr/src --net=host sonarsource/sonar-scanner-cli
 
-sonar_scan:
+scan:
 	sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=. -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_LOGIN} -Dsonar.password=${SONAR_PASSWORD} -Dsonar.go.coverage.reportPaths=coverage.out
 
 test_and_scan:

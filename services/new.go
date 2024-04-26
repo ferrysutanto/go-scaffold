@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/ferrysutanto/go-errors"
 	"github.com/ferrysutanto/go-scaffold/utils"
-	"github.com/pkg/errors"
 	"go.opentelemetry.io/otel"
 )
 
@@ -25,7 +25,7 @@ func validateConfig(ctx context.Context, conf *Config) error {
 }
 
 // New creates a new Service instance
-func New(ctx context.Context, conf *Config) (Service, error) {
+func New(ctx context.Context, conf *Config) (IService, error) {
 	// 1. Validate context
 	if ctx == nil {
 		return nil, errors.New("[services][New] context is required")

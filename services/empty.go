@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 
-	"github.com/pkg/errors"
+	"github.com/ferrysutanto/go-errors"
 	"go.opentelemetry.io/otel"
 )
 

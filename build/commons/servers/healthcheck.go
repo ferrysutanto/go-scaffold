@@ -3,7 +3,7 @@ package servers
 import (
 	"net/http"
 
-	"github.com/pkg/errors"
+	"github.com/ferrysutanto/go-errors"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/ferrysutanto/go-scaffold/services"
@@ -22,7 +22,7 @@ func Healthcheck(c *gin.Context) {
 	// 3. execute the service
 	if err := services.Healthcheck(ctx); err != nil {
 		// 3.a. wrap the error with additional context
-		err = errors.Wrap(err, "[api/servers][Healthcheck] failed to execute service healthcheck")
+		err = errors.WrapWithCode(err, "failed to execute healthcheck", 500)
 		// 3.b. add the error to the span
 		span.RecordError(err)
 		// 3.c. log the error

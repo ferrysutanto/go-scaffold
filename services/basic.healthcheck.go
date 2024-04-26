@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 
-	"github.com/pkg/errors"
+	"github.com/ferrysutanto/go-errors"
 	"go.opentelemetry.io/otel"
 )
 
@@ -18,7 +18,7 @@ func (s *basicService) Healthcheck(ctx context.Context) error {
 	defer span.End()
 
 	// 3. validate model
-	if err := s.r.DB().Ping(ctx); err != nil {
+	if err := s.db.Ping(ctx); err != nil {
 		err = errors.Wrap(err, "[services][basicService:Healthcheck] failed to ping model")
 		span.RecordError(err)
 		return err

@@ -7,7 +7,7 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-type Service interface {
+type IService interface {
 	Healthcheck(ctx context.Context) error
 }
 

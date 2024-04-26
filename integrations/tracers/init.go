@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/pkg/errors"
+	"github.com/ferrysutanto/go-errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/sdk/resource"
@@ -53,7 +53,7 @@ func Init(ctx context.Context, cfg *Config) error {
 		exporterOptions...,
 	)
 	if err != nil {
-		return errors.Wrap(err, "[tracers][Init] failed to create the collector exporter")
+		return errors.WrapWithCode(err, "failed to create tracing agent exporter", 500)
 	}
 
 	log.Printf("[tracers][Init] tracing agent is running on %s, secure conn: %t", tracingAgentEndpoint, tracingAgentIsSecure)

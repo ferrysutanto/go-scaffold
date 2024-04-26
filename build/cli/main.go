@@ -1,14 +1,13 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"os"
 
+	"github.com/ferrysutanto/go-errors"
 	"github.com/ferrysutanto/go-scaffold/services"
 	"github.com/joho/godotenv"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"go.opentelemetry.io/otel"
 )
@@ -45,7 +44,7 @@ It provides a basic structure and a few basic functionalities.`,
 
 		// 3. execute the service
 		if err := cmd.Help(); err != nil {
-			err = errors.Wrapf(err, "[%s] failed to run rootCmd", appName)
+			err = errors.WrapWithCode(err, fmt.Sprintf("[%s] failed to run rootCmd", appName), 500)
 			span.RecordError(err)
 			fmt.Println(err)
 			os.Exit(1)
@@ -76,19 +75,7 @@ var healthcheckCmd = &cobra.Command{
 }
 
 func init() {
-	ctx := context.Background()
-
-	// Load .env file
-	if err := godotenv.Load(); err != nil {
-		log.Printf("[%s] No .env file found...", appName)
-	}
-
-	// Init services default
-	if err := services.Init(ctx); err != nil {
-		fmt.Printf("[%s] failed to init services: %v\n", appName, err)
-	}
-
-	// Add healthcheck command
+	// Add commands
 	rootCmd.AddCommand(healthcheckCmd)
 }
 

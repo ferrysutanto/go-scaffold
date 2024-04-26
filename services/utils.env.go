@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/pkg/errors"
+	"github.com/ferrysutanto/go-errors"
 	"github.com/sethvargo/go-envconfig"
 	"go.opentelemetry.io/otel"
 )
