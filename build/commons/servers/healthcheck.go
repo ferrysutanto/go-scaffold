@@ -16,7 +16,7 @@ func Healthcheck(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	// 2. create a span and defer its closure
-	ctx, span := otel.Tracer("").Start(ctx, "[api/servers][Healthcheck]")
+	ctx, span := otel.Tracer("").Start(ctx, "[servers][Healthcheck]")
 	defer span.End()
 
 	// 3. execute the service
@@ -26,7 +26,7 @@ func Healthcheck(c *gin.Context) {
 		// 3.b. add the error to the span
 		span.RecordError(err)
 		// 3.c. log the error
-		log.Errorln(err)
+		log.Errorln(errors.RootCause(err))
 		// 3.d. return the error to the client
 		c.JSON(http.StatusInternalServerError, GenericResponse{Errors: []string{errInternal.Error()}})
 		return

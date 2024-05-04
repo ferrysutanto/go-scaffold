@@ -52,3 +52,12 @@ services:
       - 14268:14268
       - 14269:14269
       - 9411:9411
+  api_swagger:
+    image: swaggerapi/swagger-ui
+    container_name: scaffold_dev_swagger
+    ports:
+      - "${SWAGGER_PORT}:8080"
+    environment:
+      - SWAGGER_JSON=/api/api.yaml
+    volumes:
+      - ./swagger:/api

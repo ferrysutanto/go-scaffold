@@ -8,13 +8,13 @@ type IDB interface {
 	Ping(context.Context) error
 }
 
-var g IDB = &emptyModel{}
+var g IDB = placeholder()
 
-func SetGlobal(db IDB) {
+func Set(db IDB) {
 	g = db
 }
 
-func GetGlobal() IDB {
+func Get() IDB {
 	return g
 }
 

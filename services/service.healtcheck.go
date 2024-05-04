@@ -7,19 +7,19 @@ import (
 	"go.opentelemetry.io/otel"
 )
 
-func (s *basicService) Healthcheck(ctx context.Context) error {
+func (s *srvImpl) Healthcheck(ctx context.Context) error {
 	// 1. validate context
 	if ctx == nil {
-		return errors.New("[services][basicService:Healthcheck] context is nil")
+		return errors.NewWithCode("context is required", 400)
 	}
 
 	// 2. init tracer span and defer span end
-	ctx, span := otel.Tracer("").Start(ctx, "[services][basicService:Healthcheck]")
+	ctx, span := otel.Tracer("").Start(ctx, "[services][service:Healthcheck]")
 	defer span.End()
 
 	// 3. validate model
 	if err := s.db.Ping(ctx); err != nil {
-		err = errors.Wrap(err, "[services][basicService:Healthcheck] failed to ping model")
+		err = errors.WrapWithCode(err, "failed to ping the service", 500)
 		span.RecordError(err)
 		return err
 	}

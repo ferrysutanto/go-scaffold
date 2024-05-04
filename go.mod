@@ -14,7 +14,6 @@ require (
 	github.com/lib/pq v1.2.0
 	github.com/sethvargo/go-envconfig v1.0.0
 	github.com/sirupsen/logrus v1.9.3
-	github.com/sony/sonyflake v1.1.0
 	github.com/spf13/cobra v1.8.0
 	go.opentelemetry.io/otel v1.21.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.21.0

@@ -2,9 +2,11 @@ package services
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/ferrysutanto/go-scaffold/repositories/cache"
+	"github.com/ferrysutanto/go-scaffold/repositories/db"
 	"github.com/go-redis/redis/v8"
+	"github.com/jmoiron/sqlx"
 )
 
 type IService interface {
@@ -12,11 +14,34 @@ type IService interface {
 }
 
 type Config struct {
-	Env       string    `json:"env" yaml:"env" env-default:"development" validate:"required"`
-	DB        *DbConfig `validate:"required"`
-	ReplicaDB *DbConfig `validate:"required"`
-	Cache     *CacheConfig
-	Tracer    *TracerConfig
+	Env string `json:"env" yaml:"env" env-default:"development" validate:"required"`
+
+	DbClient db.IDB
+	DB       *DbConfig
+
+	CacheClient cache.ICache
+	Cache       *CacheConfig
+	Tracer      *TracerConfig
+}
+
+type RDBMSConfig struct {
+	DbClient *sqlx.DB
+
+	Host     *string
+	Port     *uint
+	Username *string
+	Password *string
+	Name     *string
+	SslMode  *bool
+
+	ReplicaDbClient *sqlx.DB
+
+	ReplicaHost     *string
+	ReplicaPort     *uint
+	ReplicaUsername *string
+	ReplicaPassword *string
+	ReplicaName     *string
+	ReplicaSslMode  *bool
 }
 
 type DbConfig struct {
@@ -24,24 +49,25 @@ type DbConfig struct {
 	DriverName string `json:"driver_name" yaml:"driver_name" validate:"required"`
 
 	// You can supply either an sql.DB object or config of the database connection, but not both (mutually exclusive)
-	DB       *sql.DB
-	Host     string `json:"db_host" yaml:"db_host" validate:"hostname|ip"`
-	Port     int    `json:"db_port" yaml:"db_port" validate:"numeric"`
-	Name     string `json:"db_name" yaml:"db_name"`
-	Username string `json:"db_username" yaml:"db_username"`
-	Password string `json:"db_password" yaml:"db_password"`
-	SslMode  bool   `json:"db_ssl_mode" yaml:"db_ssl_mode"`
+	DB db.IDB
+
+	RDBMSConfig *RDBMSConfig
+}
+
+type RedisConfig struct {
+	RedisClient *redis.Client
+
+	Host     *string `json:"host" yaml:"host" validate:"hostname|ip"`
+	Port     *uint   `json:"port" yaml:"port" validate:"numeric"`
+	Username *string `json:"username" yaml:"username"`
+	Password *string `json:"password" yaml:"password"`
+	DB       *uint   `json:"db" yaml:"db" validate:"numeric"`
 }
 
 type CacheConfig struct {
-	// You can supply either an redis.Client object or config of the redis connection, but not both (mutually exclusive)
-	Client   *redis.Client
-	Driver   string `json:"driver_name" yaml:"driver_name" validate:"required"`
-	Host     string `json:"host" yaml:"host" validate:"hostname|ip"`
-	Port     int    `json:"port" yaml:"port" validate:"numeric"`
-	Username string `json:"username" yaml:"username"`
-	Password string `json:"password" yaml:"password"`
-	DB       int    `json:"db" yaml:"db" validate:"numeric"`
+	Driver string `json:"driver_name" yaml:"driver_name" validate:"required"`
+
+	*RedisConfig
 }
 
 type TracerConfig struct {

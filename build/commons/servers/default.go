@@ -3,12 +3,19 @@ package servers
 import (
 	"context"
 	"net/http"
+
+	"github.com/ferrysutanto/go-scaffold/config"
 )
 
 func init() {
 	ctx := context.Background()
 
-	srv, err := New(ctx, &Config{})
+	cfg := config.Get()
+
+	srv, err := New(ctx, &Config{
+		Host: cfg.AppHost,
+		Port: cfg.AppPort,
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -22,10 +29,10 @@ func init() {
 
 var g *http.Server
 
-func Global() *http.Server {
+func Get() *http.Server {
 	return g
 }
 
-func SetGlobal(srv *http.Server) {
+func SetGet(srv *http.Server) {
 	g = srv
 }
