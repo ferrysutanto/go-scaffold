@@ -19,7 +19,7 @@ func Get() *Config {
 }
 
 func init() {
-	if err := LoadApiConfig(context.Background()); err != nil {
+	if err := LoadConfig(context.Background()); err != nil {
 		log.Fatalf("failed to load config: %v", err)
 	}
 }
@@ -36,12 +36,12 @@ type Config struct {
 	Cognito *cognitoConfig `env:", prefix=COGNITO_"`
 }
 
-func LoadApiConfig(ctx context.Context) error {
+func LoadConfig(ctx context.Context) error {
 	if ctx == nil {
 		return errors.NewWithCode("context is required", 400)
 	}
 
-	ctx, span := otel.Tracer("").Start(ctx, "[utils][GetEnv]")
+	ctx, span := otel.Tracer("").Start(ctx, "[config][LoadConfig]")
 	defer span.End()
 
 	wd, err := os.Getwd()

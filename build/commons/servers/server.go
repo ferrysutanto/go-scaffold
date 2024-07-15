@@ -11,25 +11,12 @@ import (
 	"go.opentelemetry.io/otel"
 )
 
-const (
-	errInternalMsg = "internal_server_error"
-)
-
-var (
-	errInternal = errors.New(errInternalMsg)
-)
-
 type Handler interface {
 	Healthcheck(c *gin.Context)
 }
 
 type HealthcheckResponse struct {
 	Status string `json:"status" example:"OK"`
-}
-
-type GenericResponse struct {
-	Status *string  `json:"status,omitempty" yaml:"status,omitempty" example:"OK"`
-	Errors []string `json:"errors,omitempty" yaml:"errors,omitempty" example:"[\"error1\", \"error2\"]"`
 }
 
 type PageInfo struct {
@@ -51,7 +38,7 @@ func New(ctx context.Context, conf *Config) (*http.Server, error) {
 	}
 
 	// 2. start a span and defer its closure
-	_, span := otel.Tracer("").Start(ctx, "[api/servers][New]")
+	_, span := otel.Tracer("").Start(ctx, "[servers][New]")
 	defer span.End()
 
 	// 3. declare router

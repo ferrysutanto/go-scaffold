@@ -28,7 +28,7 @@ func Healthcheck(c *gin.Context) {
 		// 3.c. log the error
 		log.Errorln(errors.RootCause(err))
 		// 3.d. return the error to the client
-		c.JSON(http.StatusInternalServerError, GenericResponse{Errors: []string{errInternal.Error()}})
+		c.Status(http.StatusInternalServerError)
 		return
 	}
 
