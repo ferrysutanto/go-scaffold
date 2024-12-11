@@ -32,7 +32,7 @@ type RDBMSConfig struct {
 	Username *string
 	Password *string
 	Name     *string
-	SslMode  *bool
+	SslMode  *string
 
 	ReplicaDbClient *sqlx.DB
 
@@ -41,7 +41,7 @@ type RDBMSConfig struct {
 	ReplicaUsername *string
 	ReplicaPassword *string
 	ReplicaName     *string
-	ReplicaSslMode  *bool
+	ReplicaSslMode  *string
 }
 
 type DbConfig struct {

@@ -6,9 +6,18 @@ import (
 
 type IDB interface {
 	Ping(context.Context) error
+
+	BeginTx(context.Context) (ITx, error)
 }
 
-var g IDB = placeholder()
+type ITx interface {
+	IAccountTx
+
+	Commit(context.Context) error
+	Rollback(context.Context) error
+}
+
+var g IDB = ph()
 
 func Set(db IDB) {
 	g = db

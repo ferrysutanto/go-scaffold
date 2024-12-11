@@ -1,6 +1,7 @@
 include .env
 export $(shell sed 's/=.*//' .env)
 
+# DB Migration Section
 migration/create:
 	migrate create -ext sql -dir .dev/db-migrations/ $(name)
 
@@ -10,6 +11,7 @@ migration/run:
 migration/drop:
 	migrate -path .dev/db-migrations/ -database "postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE}" drop -f
 
+# API Section
 api/build:
 	go build -o bin/api build/api/main.go
 
@@ -25,8 +27,18 @@ api/build_image:
 api/run_container:
 	docker run --env-file=.env -p ${DOCKER_API_HOST_PORT}:${APP_PORT} ${DOCKER_API_IMAGE_NAME}
 
+# CLI Section
+cli/build:
+	go build -o bin/cli build/cli/main.go
+
+cli/run:
+	make build_cli && ./bin/cli
+
+# Local Env Support Section
 compose/up:
-	docker compose --env-file=.env -f .dev/docker-compose.yml up -d
+	include .dev/.env \
+	&& export $(shell sed 's/=.*//' .dev/.env) \
+	&& docker compose --env-file=.env -f .dev/docker-compose.yml up -d
 
 compose/down:
 	docker compose --env-file=.env -f .dev/docker-compose.yml down
@@ -37,12 +49,7 @@ compose/swagger/run:
 compose/swagger/stop:
 	docker compose --env-file=.env -f .dev/docker-compose.yml down api_swagger
 
-cli/build:
-	go build -o bin/cli build/cli/main.go
-
-cli/run:
-	make build_cli && ./bin/cli
-
+# Test Section
 test:
 	go test -v $(shell go list ./... | grep -v /vendor/) -cover -coverprofile=coverage.out
 

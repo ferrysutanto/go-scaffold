@@ -16,8 +16,8 @@ func instantiateDbFromCfg(ctx context.Context, conf *Config) (main, replica *sql
 	defer span.End()
 
 	sslMode := "disable"
-	if conf.SslMode != nil && *conf.SslMode {
-		sslMode = "verify-full"
+	if conf.SslMode != nil {
+		sslMode = *conf.SslMode
 	}
 	ds := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s", *conf.Host, *conf.Port, *conf.Username, *conf.Password, *conf.Name, sslMode)
 	main, err = sqlx.ConnectContext(ctx, "postgres", ds)
@@ -33,8 +33,8 @@ func instantiateDbFromCfg(ctx context.Context, conf *Config) (main, replica *sql
 	// if replica is provided, open a dedicated replica connection
 	if conf.ReplicaHost != nil {
 		sslMode := "disable"
-		if conf.ReplicaSslMode != nil && *conf.ReplicaSslMode {
-			sslMode = "verify-full"
+		if conf.ReplicaSslMode != nil {
+			sslMode = *conf.ReplicaSslMode
 		}
 		replicaDS := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s", *conf.ReplicaHost, *conf.ReplicaPort, *conf.ReplicaUsername, *conf.ReplicaPassword, *conf.ReplicaName, sslMode)
 

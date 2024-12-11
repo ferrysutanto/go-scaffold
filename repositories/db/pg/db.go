@@ -30,7 +30,7 @@ type Config struct {
 	Name     *string
 	Username *string
 	Password *string
-	SslMode  *bool // SSLMode is the ssl mode of the database connection, default is disable
+	SslMode  *string // SSLMode is the ssl mode of the database connection, default is disable
 
 	ReplicaDB       *sqlx.DB // ReplicaDB is the database connection for replication, it's optional, if it's not provided, then it will use the same connection as the main database
 	ReplicaHost     *string
@@ -38,7 +38,7 @@ type Config struct {
 	ReplicaName     *string
 	ReplicaUsername *string
 	ReplicaPassword *string
-	ReplicaSslMode  *bool
+	ReplicaSslMode  *string
 }
 
 func validateConfig(ctx context.Context, cfg *Config) error {
@@ -144,9 +144,7 @@ func (m *pgDB) Ping(ctx context.Context) error {
 
 	// 3. ping main db
 	if err := m.mainDB.PingContext(ctx); err != nil {
-		// wrap error with additional info
 		err = errors.Wrap(err, "[repositories/db][pgModel:Ping] failed to ping db")
-		// record error in span
 		span.RecordError(err)
 
 		return err
@@ -154,9 +152,7 @@ func (m *pgDB) Ping(ctx context.Context) error {
 
 	// 4. ping replica db, same as above but for replica
 	if err := m.replicaDB.PingContext(ctx); err != nil {
-		// wrap error with additional info
 		err = errors.Wrap(err, "[repositories/db][pgModel:Ping] failed to ping db replica")
-		// record error in span
 		span.RecordError(err)
 
 		return err

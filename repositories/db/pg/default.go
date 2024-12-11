@@ -9,7 +9,7 @@ import (
 	"github.com/ferrysutanto/go-scaffold/repositories/db"
 )
 
-func init() {
+func Init() {
 	ctx := context.Background()
 
 	cfg := config.Get()
