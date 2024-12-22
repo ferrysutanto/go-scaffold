@@ -16,7 +16,7 @@ type IService interface {
 type Config struct {
 	Env string `json:"env" yaml:"env" env-default:"development" validate:"required"`
 
-	DbClient db.IDB
+	DbClient db.IGenericDB
 	DB       *DbConfig
 
 	CacheClient cache.ICache
@@ -49,7 +49,7 @@ type DbConfig struct {
 	DriverName string `json:"driver_name" yaml:"driver_name" validate:"required"`
 
 	// You can supply either an sql.DB object or config of the database connection, but not both (mutually exclusive)
-	DB db.IDB
+	DB db.IGenericDB
 
 	RDBMSConfig *RDBMSConfig
 }

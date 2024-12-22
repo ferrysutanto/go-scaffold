@@ -1,5 +1,12 @@
-include .env
-export $(shell sed 's/=.*//' .env)
+ENV_FILE ?= .env
+
+# If user supplies -env=path/to/envfile, it will override the default
+ifeq (,$(wildcard $(ENV_FILE)))
+$(error Environment file '$(ENV_FILE)' not found)
+endif
+
+include $(ENV_FILE)
+export
 
 # DB Migration Section
 migration/create:
@@ -36,15 +43,13 @@ cli/run:
 
 # Local Env Support Section
 compose/up:
-	include .dev/.env \
-	&& export $(shell sed 's/=.*//' .dev/.env) \
-	&& docker compose --env-file=.env -f .dev/docker-compose.yml up -d
+	docker compose --env-file=.dev/.env -f .dev/docker-compose.yml up -d
 
 compose/down:
-	docker compose --env-file=.env -f .dev/docker-compose.yml down
+	docker compose --env-file=.dev/.env -f .dev/docker-compose.yml down
 
 compose/swagger/run:
-	docker compose --env-file=.env -f .dev/docker-compose.yml up --build api_swagger -d
+	docker compose --env-file=.dev/.env -f .dev/docker-compose.yml up --build api_swagger -d
 
 compose/swagger/stop:
 	docker compose --env-file=.env -f .dev/docker-compose.yml down api_swagger

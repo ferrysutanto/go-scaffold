@@ -1,0 +1,24 @@
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=postgres
+
+# DynamoDB configuration
+DDB_PORT=8000
+
+# Redis configuration
+REDIS_PORT=6379
+REDIS_USERNAME=
+REDIS_PASSWORD=
+
+# SonarQube configuration
+SONARQUBE_JDBC_USER=sonarqube
+SONARQUBE_JDBC_PASSWORD=sonarqube
+SONARQUBE_DB=sonarqube
+SONARQUBE_PORT=9000
+
+# Jaeger configuration
+JAEGER_UI_PORT=16686
+
+# Swagger configuration
+SWAGGER_UI_PORT=8080

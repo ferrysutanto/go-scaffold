@@ -46,6 +46,8 @@ github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f h1:lO4WD4F/r
 github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f/go.mod h1:cuUVRXasLTGF7a8hSLbxyZXjz+1KgoB3wDUb6vlszIc=
 github.com/ferrysutanto/go-errors v1.0.2 h1:K+6gbIj5FxYEf/3RVK2EdMD9Bx05RD0N9qJ403PsYCY=
 github.com/ferrysutanto/go-errors v1.0.2/go.mod h1:mBVrBmYY/hFKkk6TNZVnhlFt1sxlkmpU+zjOq/6f6kU=
+github.com/ferrysutanto/go-errors v1.0.4 h1:xf9EZhXEIuVLZT/+h/R2ojRsPwkgQS7huNaU373/Cew=
+github.com/ferrysutanto/go-errors v1.0.4/go.mod h1:mBVrBmYY/hFKkk6TNZVnhlFt1sxlkmpU+zjOq/6f6kU=
 github.com/fsnotify/fsnotify v1.4.9 h1:hsms1Qyu0jgnwNXIxa+/V/PDsU6CfLf6CNO8H7IWoS4=
 github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4IgpuI1SZQ=
 github.com/gabriel-vasile/mimetype v1.4.2 h1:w5qFW6JKBz9Y393Y4q372O9A7cUSequkh1Q7OhCmWKU=

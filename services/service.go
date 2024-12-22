@@ -11,11 +11,10 @@ import (
 	"github.com/ferrysutanto/go-scaffold/integrations/tracers"
 	"github.com/ferrysutanto/go-scaffold/repositories/cache"
 	"github.com/ferrysutanto/go-scaffold/repositories/db"
-	"github.com/ferrysutanto/go-scaffold/repositories/db/pg"
 )
 
 type srvImpl struct {
-	db    db.IDB
+	db    db.IGenericDB
 	cache cache.ICache
 }
 
@@ -64,25 +63,6 @@ func New(ctx context.Context, cfg *Config) (IService, error) {
 
 			switch dbDriver {
 			case "postgres", "pg":
-				var err error
-				if resp.db, err = pg.New(ctx, &pg.Config{
-					DB:              cfg.DB.RDBMSConfig.DbClient,
-					Host:            cfg.DB.RDBMSConfig.Host,
-					Port:            cfg.DB.RDBMSConfig.Port,
-					Username:        cfg.DB.RDBMSConfig.Username,
-					Password:        cfg.DB.RDBMSConfig.Password,
-					Name:            cfg.DB.RDBMSConfig.Name,
-					SslMode:         cfg.DB.RDBMSConfig.SslMode,
-					ReplicaDB:       cfg.DB.RDBMSConfig.ReplicaDbClient,
-					ReplicaHost:     cfg.DB.RDBMSConfig.ReplicaHost,
-					ReplicaPort:     cfg.DB.RDBMSConfig.ReplicaPort,
-					ReplicaUsername: cfg.DB.RDBMSConfig.ReplicaUsername,
-					ReplicaPassword: cfg.DB.RDBMSConfig.ReplicaPassword,
-					ReplicaName:     cfg.DB.RDBMSConfig.ReplicaName,
-					ReplicaSslMode:  cfg.DB.RDBMSConfig.ReplicaSslMode,
-				}); err != nil {
-					return nil, err
-				}
 			default:
 				break
 			}

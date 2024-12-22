@@ -8,32 +8,29 @@ import (
 
 var errNotImplemented = errors.NewWithCode("function not implemented", 501)
 
-// phDB is a model that implements DB interface
-type phDB struct{}
+// phGenericDB is a placeholder for IGenericDB
+type phGenericDB struct{}
 
-func ph() IDB {
-	return &phDB{}
+func ph() IGenericDB {
+	return &phGenericDB{}
 }
 
 // Ping by placeholderModel is just displaying that the function is not implemented yet
-func (*phDB) Ping(ctx context.Context) error {
+func (*phGenericDB) Ping(ctx context.Context) error {
 	return errNotImplemented
 }
 
-func (*phDB) BeginTx(ctx context.Context) (ITx, error) {
-	return &phTx{
-		phAccTx: &phAccTx{},
-	}, nil
+// BeginTx by placeholderModel is just displaying that the function is not implemented yet
+func (*phGenericDB) BeginTx(ctx context.Context) (ITx, error) {
+	return nil, errNotImplemented
 }
 
-type phTx struct {
-	*phAccTx
+// Account by placeholderModel is just displaying that the function is not implemented yet
+func (*phGenericDB) Account(ctx context.Context) IAccountRepository {
+	return &phAccDB{}
 }
 
-func (*phTx) Commit(ctx context.Context) error {
-	return errNotImplemented
-}
-
-func (*phTx) Rollback(ctx context.Context) error {
-	return errNotImplemented
+// Profile by placeholderModel is just displaying that the function is not implemented yet
+func (*phGenericDB) Profile(ctx context.Context) IProfileRepository {
+	return &phProfDB{}
 }

@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-type IAccountDB interface {
-	GetAccounts(ctx context.Context, limit, offset int) (*Accounts, error)
+type IAccountRepository interface {
+	GetAccounts(ctx context.Context, param *ParamGetAccounts) (*Accounts, error)
 	FindAccountByID(ctx context.Context, id string) (*Account, error)
 	CreateAccount(ctx context.Context, account *ParamCreateAccount) (*Account, error)
 	UpdateAccount(ctx context.Context, account *ParamUpdateAccount) (*Account, error)
@@ -32,43 +32,38 @@ type Accounts struct {
 }
 
 type Account struct {
-	ID         string
-	FirstName  string
-	LastName   string
-	Email      string
-	Sex        *string
-	Birthdate  time.Time
-	PictureURL *string
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	ID        string
+	Username  string
+	Email     *string
+	Phone     *string
+	Status    string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type ParamGetAccounts struct {
 }
 
 type ParamCreateAccount struct {
-	ID         *string
-	FirstName  string
-	LastName   string
-	Email      string
-	Sex        *string
-	Birthdate  time.Time
-	PictureURL *string
+	ID       *string
+	Username string
+	Email    *string
+	Phone    *string
+	Status   string
 }
 
 type ParamUpdateAccount struct {
-	ID         string
-	FirstName  string
-	LastName   string
-	Email      string
-	Sex        *string
-	Birthdate  time.Time
-	PictureURL *string
+	ID       string
+	Username string
+	Email    *string
+	Phone    *string
+	Status   string
 }
 
 type ParamPatchAccount struct {
-	ID         string
-	FirstName  *string
-	LastName   *string
-	Email      *string
-	Sex        *string
-	Birthdate  *time.Time
-	PictureURL *string
+	ID       string
+	Username *string
+	Email    *string
+	Phone    *string
+	Status   *string
 }

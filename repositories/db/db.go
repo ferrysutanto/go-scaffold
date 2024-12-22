@@ -4,26 +4,27 @@ import (
 	"context"
 )
 
-type IDB interface {
+type IGenericDB interface {
 	Ping(context.Context) error
 
-	BeginTx(context.Context) (ITx, error)
+	BeginTx(ctx context.Context) (ITx, error)
+
+	Account(ctx context.Context) IAccountRepository
+	Profile(ctx context.Context) IProfileRepository
 }
 
 type ITx interface {
 	IAccountTx
-
-	Commit(context.Context) error
-	Rollback(context.Context) error
+	IProfileTx
 }
 
-var g IDB = ph()
+var g IGenericDB = ph()
 
-func Set(db IDB) {
+func Set(db IGenericDB) {
 	g = db
 }
 
-func Get() IDB {
+func Get() IGenericDB {
 	return g
 }
 

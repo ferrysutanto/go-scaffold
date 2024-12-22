@@ -4,7 +4,7 @@ import "context"
 
 type phAccDB struct{}
 
-func (*phAccDB) GetAccounts(ctx context.Context, id string) (*Account, error) {
+func (*phAccDB) GetAccounts(ctx context.Context, param *ParamGetAccounts) (*Accounts, error) {
 	return nil, errNotImplemented
 }
 

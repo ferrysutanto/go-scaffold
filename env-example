@@ -1,68 +1,53 @@
-APP_NAME=go-scaffold
-APP_HOST=localhost
-APP_PORT=8080
-APP_ENV=development
-APP_DEBUG=true
+# UNCOMMENT LINES TO USE
+# APP_NAME=go-scaffold
+# APP_HOST=localhost
+# APP_PORT=8080
+# APP_ENV=dev # env: dev, test, stage, prod
+# APP_DEBUG=true # APP_DEBUG should be set to false in production
 
-# Database configuration (postgres)
-DB_DRIVER=postgres
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-DB_NAME=postgres
-DB_SSL_MODE=disable
+# DATABASE SECTION (supported: postgres, dynamodb/ddb)
+# DB_DRIVER=postgres
 
-REPLICA_DB_DRIVER=postgres
-REPLICA_DB_HOST=localhost
-REPLICA_DB_PORT=5432
-REPLICA_DB_USERNAME=postgres
-REPLICA_DB_PASSWORD=postgres
-REPLICA_DB_NAME=postgres
-REPLICA_DB_SSL_MODE=disable
+# POSTGRES CONFIG, ONLY IF DB_DRIVER=postgres
+# PG_DB_HOST=localhost
+# PG_DB_PORT=5432
+# PG_DB_USERNAME=postgres
+# PG_DB_PASSWORD=postgres
+# PG_DB_NAME=postgres
+# PG_DB_SSL_MODE=disable
 
-# DynamoDB configuration
-DYNAMODB_HOST=localhost
-DYNAMODB_PORT=8000
+# PG_REPLICA_DB_DRIVER=postgres
+# PG_REPLICA_DB_HOST=localhost
+# PG_REPLICA_DB_PORT=5432
+# PG_REPLICA_DB_USERNAME=postgres
+# PG_REPLICA_DB_PASSWORD=postgres
+# PG_REPLICA_DB_NAME=postgres
+# PG_REPLICA_DB_SSL_MODE=disable
 
-# Redis configuration
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_USERNAME=
-REDIS_PASSWORD=
-REDIS_DB=0
-REDIS_USE_TLS=false
+# DYNAMODB CONFIG, ONLY IF DB_DRIVER=dynamodb/ddb
+# DDB_HOST=localhost
+# DDB_PORT=8000
 
-# Cache configuration (redis by default)
-CACHE_DRIVER=redis
-CACHE_HOST=localhost
-CACHE_PORT=6379
-CACHE_USERNAME=
-CACHE_PASSWORD=
-CACHE_DB=0
+# CACHE SECTION (supported: redis)
+# CACHE_DRIVER=redis
+# CACHE_HOST=localhost
+# CACHE_PORT=6379
+# CACHE_USERNAME=
+# CACHE_PASSWORD=
+# CACHE_DB=0
 
-# SonarQube configuration
-SONARQUBE_HOST=localhost
-SONARQUBE_PORT=9000
-SONARQUBE_JDBC_USER=sonarqube
-SONARQUBE_JDBC_PASSWORD=sonarqube
-SONARQUBE_DB=sonarqube
+# SONARSCAN SECTION
+# SONAR_HOST_URL=http://localhost:9000
+# SONAR_LOGIN=admin
+# SONAR_PASSWORD=admin
+# SONAR_PROJECT_KEY=go-scaffold
 
-SONAR_HOST_URL=http://localhost:9000
-SONAR_LOGIN=admin
-SONAR_PASSWORD=admin
-SONAR_PROJECT_KEY=go-scaffold
-
-# Tracing configuration
-TRACING_ENABLED=true
-TRACING_AGENT_TYPE=jaeger
-TRACING_AGENT_IS_SECURE=false
-TRACING_AGENT_HOST=localhost
-TRACING_AGENT_PORT=4317
-TRACING_SERVICE_NAME=go-scaffold
-TRACING_SAMPLER_TYPE=const
-TRACING_SAMPLER_PARAM=1
-
-# Jaeger configuration
-JAEGER_PORT=6831
-JAEGER_UI_PORT=16686
+# TRACING SECTION
+# TRACING_ENABLED=true
+# TRACING_AGENT_TYPE=jaeger
+# TRACING_AGENT_IS_SECURE=false
+# TRACING_AGENT_HOST=localhost
+# TRACING_AGENT_PORT=4317
+# TRACING_SERVICE_NAME=go-scaffold
+# TRACING_SAMPLER_TYPE=const
+# TRACING_SAMPLER_PARAM=1
