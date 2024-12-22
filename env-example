@@ -9,20 +9,20 @@
 # DB_DRIVER=postgres
 
 # POSTGRES CONFIG, ONLY IF DB_DRIVER=postgres
-# PG_DB_HOST=localhost
-# PG_DB_PORT=5432
-# PG_DB_USERNAME=postgres
-# PG_DB_PASSWORD=postgres
-# PG_DB_NAME=postgres
-# PG_DB_SSL_MODE=disable
+# DB_HOST=localhost
+# DB_PORT=5432
+# DB_USERNAME=postgres
+# DB_PASSWORD=postgres
+# DB_NAME=postgres
+# DB_SSL_MODE=disable
 
-# PG_REPLICA_DB_DRIVER=postgres
-# PG_REPLICA_DB_HOST=localhost
-# PG_REPLICA_DB_PORT=5432
-# PG_REPLICA_DB_USERNAME=postgres
-# PG_REPLICA_DB_PASSWORD=postgres
-# PG_REPLICA_DB_NAME=postgres
-# PG_REPLICA_DB_SSL_MODE=disable
+# REPLICA_DB_DRIVER=postgres
+# REPLICA_DB_HOST=localhost
+# REPLICA_DB_PORT=5432
+# REPLICA_DB_USERNAME=postgres
+# REPLICA_DB_PASSWORD=postgres
+# REPLICA_DB_NAME=postgres
+# REPLICA_DB_SSL_MODE=disable
 
 # DYNAMODB CONFIG, ONLY IF DB_DRIVER=dynamodb/ddb
 # DDB_HOST=localhost
