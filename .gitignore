@@ -8,3 +8,5 @@ tmp/
 .dev/dynamodb
 
 coverage.out
+
+!utils/.env

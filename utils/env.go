@@ -16,73 +16,87 @@ import (
 )
 
 type EnvironmentVariables struct {
-	AppName     string         `env:"APP_NAME,required"`
-	AppHost     string         `env:"APP_HOST" envDefault:"localhost"`
-	AppPort     int            `env:"APP_PORT" envDefault:"8080"`
-	Environment string         `env:"APP_ENV,required"`
-	IsDebug     bool           `env:"APP_DEBUG" envDefault:"false"`
-	DB          *dbConfig      `env:", prefix="`
-	Cache       *cacheConfig   `env:", prefix=CACHE_"`
-	Tracer      *tracerConfig  `env:", prefix=TRACING_"`
-	Cognito     *cognitoConfig `env:", prefix=COGNITO_"`
+	AppName     string `env:"APP_NAME,required"`
+	AppHost     string `env:"APP_HOST"`
+	AppPort     int    `env:"APP_PORT"`
+	Environment string `env:"APP_ENV,required"`
+	IsDebug     bool   `env:"APP_DEBUG"`
+
+	DB      *dbConfig      `env:", prefix=DB_"`
+	Cache   *cacheConfig   `env:", prefix=CACHE_"`
+	Tracer  *tracerConfig  `env:", prefix=TRACING_"`
+	Cognito *cognitoConfig `env:", prefix=COGNITO_"`
 }
 
-type redisConfig struct {
-	Host     string `env:"HOST" envDefault:"localhost"`
-	Port     uint   `env:"PORT" envDefault:"6379"`
-	Username string `env:"USERNAME" envDefault:""`
-	Password string `env:"PASSWORD" envDefault:""`
-	DB       uint   `env:"DB" envDefault:"0"`
-}
-
-type cacheConfig struct {
-	Redis *redisConfig `env:", prefix=REDIS_"`
-}
-
-type cognitoConfig struct {
-	AwsRegion  string `env:"AWS_REGION" envDefault:"ap-southeast-3"`
-	UserPoolID string `env:"USER_POOL_ID" envDefault:""`
-	ClientID   string `env:"CLIENT_ID" envDefault:""`
-}
+// 1. DB CONFIG SECTION
 
 type dbConfig struct {
-	Driver string `env:"DB_DRIVER" envDefault:"dynamodb" validate:"required"`
+	Driver string `env:"DRIVER" validate:"required"`
 
-	PG  *pgDBConfig     `env:", prefix=DB_PG_"`
-	DDB *dynamoDBConfig `env:", prefix=DB_DDB_"`
+	PG  *pgDBConfig
+	DDB *dynamoDBConfig
 }
 
 type pgDBConfig struct {
-	Host     string `env:"HOST" envDefault:"localhost"`
-	Port     uint   `env:"PORT" envDefault:"5432"`
-	User     string `env:"USER" envDefault:"postgres"`
-	Password string `env:"PASSWORD" envDefault:"postgres"`
-	Database string `env:"DATABASE" envDefault:"postgres"`
-	SslMode  string `env:"SSL_MODE" envDefault:"disable"`
+	Host     string `env:"HOST"`
+	Port     uint   `env:"PORT"`
+	User     string `env:"USERNAME"`
+	Password string `env:"PASSWORD"`
+	Database string `env:"NAME"`
+	SslMode  string `env:"SSL_MODE"`
 
 	ReplicaHost     *string `env:"REPLICA_HOST"`
 	ReplicaPort     *uint   `env:"REPLICA_PORT"`
-	ReplicaUser     *string `env:"REPLICA_USER"`
+	ReplicaUser     *string `env:"REPLICA_USERNAME"`
 	ReplicaPassword *string `env:"REPLICA_PASSWORD"`
-	ReplicaDatabase *string `env:"REPLICA_DATABASE"`
+	ReplicaDatabase *string `env:"REPLICA_NAME"`
 	ReplicaSslMode  *string `env:"REPLICA_SSL_MODE"`
 }
 
 type dynamoDBConfig struct {
 	AccessKeyID     *string `env:"AWS_ACCESS_KEY"`
 	SecretAccessKey *string `env:"AWS_SECRET"`
-	Endpoint        *string `env:"AWS_ENDPOINT" envDefault:"http://localhost:8000"`
-	Region          *string `env:"AWS_REGION" envDefault:"ap-southeast-3"`
+	Endpoint        *string `env:"AWS_ENDPOINT"`
+	Region          *string `env:"AWS_REGION"`
 }
 
-type tracerConfig struct {
-	AgentType   string `env:"AGENT_TYPE" envDefault:"jaeger" validate:"required"`
-	IsEnabled   bool   `env:"ENABLED" envDefault:"true" validate:"required"`
-	Host        string `env:"AGENT_HOST" envDefault:"localhost" validate:"required"`
-	Port        string `env:"AGENT_PORT" envDefault:"4317" validate:"required"`
-	IsSecure    bool   `env:"AGENT_IS_SECURE" envDefault:"false" validate:"required"`
-	ServiceName string `env:"SERVICE_NAME" envDefault:"go-scaffold" validate:"required"`
+// 2. CACHE CONFIG SECTION
+
+type cacheConfig struct {
+	Driver string `env:"DRIVER"` // redis, memcached
+
+	Redis *redisConfig
 }
+
+type redisConfig struct {
+	Host     string `env:"HOST"`
+	Port     uint   `env:"PORT"`
+	Username string `env:"USERNAME"`
+	Password string `env:"PASSWORD"`
+	DB       uint   `env:"DB"`
+}
+
+// 3. TRACER CONFIG SECTION
+
+type tracerConfig struct {
+	AgentType   string `env:"AGENT_TYPE" validate:"required"`
+	IsEnabled   bool   `env:"ENABLED" validate:"required"`
+	Host        string `env:"AGENT_HOST" validate:"required"`
+	Port        string `env:"AGENT_PORT" validate:"required"`
+	IsSecure    bool   `env:"AGENT_IS_SECURE" validate:"required"`
+	ServiceName string `env:"SERVICE_NAME" validate:"required"`
+}
+
+// 4. 3RD PARTY CONFIG SECTION
+
+// 4.1 AWS Cognito
+type cognitoConfig struct {
+	AwsRegion  string `env:"AWS_REGION"`
+	UserPoolID string `env:"USER_POOL_ID"`
+	ClientID   string `env:"CLIENT_ID"`
+}
+
+// Signature: func GetEnv(ctx context.Context) (*EnvironmentVariables, error)
 
 func GetEnv(ctx context.Context) (*EnvironmentVariables, error) {
 	if ctx == nil {
@@ -99,10 +113,12 @@ func GetEnv(ctx context.Context) (*EnvironmentVariables, error) {
 		return nil, err
 	}
 
+	// Load env...
 	if err := findAndLoadEnv(wd); err != nil {
 		log.Printf("failed to load .env file: %v...\nprocessing with default environment variables", err)
 	}
 
+	// Map env variables to struct
 	resp := EnvironmentVariables{}
 	if err := envconfig.Process(ctx, &resp); err != nil {
 		err = errors.ErrorfWithCode(errors.ErrUnexpected, "failed to process environment variables: %v", err)

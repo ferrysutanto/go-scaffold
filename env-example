@@ -16,13 +16,13 @@
 # DB_NAME=postgres
 # DB_SSL_MODE=disable
 
-# REPLICA_DB_DRIVER=postgres
-# REPLICA_DB_HOST=localhost
-# REPLICA_DB_PORT=5432
-# REPLICA_DB_USERNAME=postgres
-# REPLICA_DB_PASSWORD=postgres
-# REPLICA_DB_NAME=postgres
-# REPLICA_DB_SSL_MODE=disable
+# DB_REPLICA_DRIVER=postgres
+# DB_REPLICA_HOST=localhost
+# DB_REPLICA_PORT=5432
+# DB_REPLICA_USERNAME=postgres
+# DB_REPLICA_PASSWORD=postgres
+# DB_REPLICA_NAME=postgres
+# DB_REPLICA_SSL_MODE=disable
 
 # DYNAMODB CONFIG, ONLY IF DB_DRIVER=dynamodb/ddb
 # DDB_HOST=localhost
