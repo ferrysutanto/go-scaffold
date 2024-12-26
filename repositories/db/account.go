@@ -32,13 +32,13 @@ type Accounts struct {
 }
 
 type Account struct {
-	ID        string
-	Username  string
-	Email     *string
-	Phone     *string
-	Status    string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        string    `db:"id"`
+	Username  string    `db:"username"`
+	Email     *string   `db:"email"`
+	Phone     *string   `db:"phone"`
+	Status    string    `db:"status"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 type ParamGetAccounts struct {
