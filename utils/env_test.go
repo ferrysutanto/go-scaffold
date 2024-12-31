@@ -55,7 +55,7 @@ func TestGetEnv(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := GetEnv(tt.args.ctx)
+			got, err := LoadEnv(tt.args.ctx)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetEnv() error = %v, wantErr %v", err, tt.wantErr)
 				return

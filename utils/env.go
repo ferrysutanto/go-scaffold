@@ -96,9 +96,9 @@ type cognitoConfig struct {
 	ClientID   string `env:"CLIENT_ID"`
 }
 
-// Signature: func GetEnv(ctx context.Context) (*EnvironmentVariables, error)
+// Signature: func LoadEnv(ctx context.Context) (*EnvironmentVariables, error)
 
-func GetEnv(ctx context.Context) (*EnvironmentVariables, error) {
+func LoadEnv(ctx context.Context) (*EnvironmentVariables, error) {
 	if ctx == nil {
 		return nil, errors.NewWithCode("context is required", 400)
 	}

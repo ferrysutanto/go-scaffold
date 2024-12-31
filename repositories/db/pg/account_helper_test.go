@@ -16,6 +16,9 @@ import (
 
 const (
 	accQueryFindByID = "SELECT id, username, email, phone, status, created_at, updated_at FROM accounts WHERE"
+	accQueryInsert   = `INSERT INTO accounts \(id, username, email, phone, status, created_at, updated_at\) VALUES \(\$1, \$2, \$3, \$4, \$5, \$6, \$7\) RETURNING id, username, email, phone, status, created_at, updated_at`
+	accQueryUpdate   = `UPDATE accounts SET username = \$1, email = \$2, phone = \$3, status = \$4 WHERE id = \$5 RETURNING id, username, email, phone, status, created_at, updated_at`
+	accQueryDelete   = `DELETE FROM accounts WHERE id = \$1`
 )
 
 var (
@@ -23,8 +26,8 @@ var (
 	accStatus  = []string{"active", "inactive"}
 )
 
-// newAccountRepositoryWithMock creates a new AccountRepository with mock database connection (write and read)
-func newAccountRepositoryWithMock() (resp *pg.AccountRepository, writeMock sqlmock.Sqlmock, readMock sqlmock.Sqlmock, err error) {
+// newMockAccountRepository creates a new AccountRepository with mock DB Conns (write and read)
+func newMockAccountRepository() (resp db.IAccountRepository, writeMock sqlmock.Sqlmock, readMock sqlmock.Sqlmock, err error) {
 	write, writeMock, err := sqlmock.New()
 	if err != nil {
 		return
@@ -36,6 +39,9 @@ func newAccountRepositoryWithMock() (resp *pg.AccountRepository, writeMock sqlmo
 	}
 
 	readMock.ExpectPrepare(accQueryFindByID)
+	writeMock.ExpectPrepare(accQueryInsert)
+	writeMock.ExpectPrepare(accQueryUpdate)
+	writeMock.ExpectPrepare(accQueryDelete)
 
 	resp, err = pg.NewAccountRepository(context.Background(), &pg.Config{
 		PrimaryDB: write,
@@ -53,15 +59,27 @@ func randomAccStatus() string {
 	return accStatus[rand.Intn(len(accStatus))] // Pick a random status
 }
 
-func randomAccount() *db.Account {
+func createRandomAccount() *db.Account {
 	return &db.Account{
 		ID:        faker.UUIDHyphenated(),
 		Username:  faker.Username(),
 		Email:     aws.String(faker.Email()),
 		Phone:     aws.String(faker.Phonenumber()),
 		Status:    randomAccStatus(),
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+	}
+}
+
+func argAccToArrDV(acc *db.Account) []driver.Value {
+	return []driver.Value{
+		acc.ID,
+		acc.Username,
+		acc.Email,
+		acc.Phone,
+		acc.Status,
+		sqlmock.AnyArg(),
+		sqlmock.AnyArg(),
 	}
 }
 
@@ -72,22 +90,17 @@ func accToArrDV(acc *db.Account) []driver.Value {
 		acc.Email,
 		acc.Phone,
 		acc.Status,
-		acc.CreatedAt,
-		acc.UpdatedAt,
+		acc.CreatedAt.UTC(),
+		acc.UpdatedAt.UTC(),
 	}
 }
 
-func generateListOfRandomAccounts(i int) []*db.Account {
+func createRandomAccounts(i int) []*db.Account {
 	var accounts []*db.Account
 	for j := 0; j < i; j++ {
-		accounts = append(accounts, randomAccount())
+		accounts = append(accounts, createRandomAccount())
 	}
 	return accounts
 }
 
-var accList = generateListOfRandomAccounts(10)
-
-func randomAccFromList() *db.Account {
-	rand.New(rand.NewSource(time.Now().UnixNano()))
-	return accList[rand.Intn(len(accList))] // Pick a random account from the list
-}
+var accList = createRandomAccounts(10)

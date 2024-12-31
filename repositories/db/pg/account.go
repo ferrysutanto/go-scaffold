@@ -2,6 +2,7 @@ package pg
 
 import (
 	"context"
+	"regexp"
 
 	"github.com/ferrysutanto/go-scaffold/repositories/db"
 	"github.com/google/uuid"
@@ -19,7 +20,7 @@ type AccountRepository struct {
 	stmtDeleteAccountByID *sqlx.NamedStmt
 }
 
-func NewAccountRepository(ctx context.Context, config *Config) (*AccountRepository, error) {
+func NewAccountRepository(ctx context.Context, config *Config) (db.IAccountRepository, error) {
 	write, read, err := initConnection(config)
 	if err != nil {
 		return nil, err
@@ -30,29 +31,29 @@ func NewAccountRepository(ctx context.Context, config *Config) (*AccountReposito
 		return nil, err
 	}
 
-	// stmtCreateAccount, err := write.PrepareNamed("INSERT INTO accounts (id, username, email, phone, status, created_at, updated_at) VALUES (:id, :username, :email, :phone, :status, :created_at, :updated_at) RETURNING *")
-	// if err != nil {
-	// 	return nil, err
-	// }
+	stmtCreateAccount, err := write.PrepareNamed("INSERT INTO accounts (id, username, email, phone, status, created_at, updated_at) VALUES (:id, :username, :email, :phone, :status, :created_at, :updated_at) RETURNING id, username, email, phone, status, created_at, updated_at")
+	if err != nil {
+		return nil, err
+	}
 
-	// stmtUpdateAccount, err := write.PrepareNamed("UPDATE accounts SET username = :username, email = :email, phone = :phone, status = :status WHERE id = :id RETURNING *")
-	// if err != nil {
-	// 	return nil, err
-	// }
+	stmtUpdateAccount, err := write.PrepareNamed("UPDATE accounts SET username = :username, email = :email, phone = :phone, status = :status WHERE id = :id RETURNING id, username, email, phone, status, created_at, updated_at")
+	if err != nil {
+		return nil, err
+	}
 
-	// stmtDeleteAccountByID, err := write.PrepareNamed("DELETE FROM accounts WHERE id = :id")
-	// if err != nil {
-	// 	return nil, err
-	// }
+	stmtDeleteAccountByID, err := write.PrepareNamed("DELETE FROM accounts WHERE id = :id")
+	if err != nil {
+		return nil, err
+	}
 
 	return &AccountRepository{
 		prim: write,
 		repl: read,
 
-		stmtFindAccountByID: stmtFindAccountByID,
-		// stmtCreateAccount:     stmtCreateAccount,
-		// stmtUpdateAccount:     stmtUpdateAccount,
-		// stmtDeleteAccountByID: stmtDeleteAccountByID,
+		stmtFindAccountByID:   stmtFindAccountByID,
+		stmtCreateAccount:     stmtCreateAccount,
+		stmtUpdateAccount:     stmtUpdateAccount,
+		stmtDeleteAccountByID: stmtDeleteAccountByID,
 	}, nil
 }
 
@@ -94,13 +95,59 @@ func (this *AccountRepository) FindAccountByID(ctx context.Context, id string) (
 	return &resp, nil
 }
 
-func (repo *AccountRepository) CreateAccount(ctx context.Context, account *db.ParamCreateAccount) (*db.Account, error) {
+func validateEmail(email string) bool {
+	emailRegex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+	re := regexp.MustCompile(emailRegex)
+	return re.MatchString(email)
+}
+
+func validateCreateAccount(ctx context.Context, param *db.ParamCreateAccount) error {
+	errs := make([]string, 0)
+	if param.Username == "" {
+		errs = append(errs, ErrUsernameRequired.Error())
+	}
+
+	if param.Email == nil && param.Phone == nil {
+		errs = append(errs, ErrEmailOrPhoneRequired.Error())
+	}
+
+	if param.Email != nil && (*param.Email == "" || !validateEmail(*param.Email)) {
+		errs = append(errs, ErrInvalidEmail.Error())
+	}
+
+	// TODO: phone aren't handled yet
+
+	if len(errs) > 0 {
+		return ErrValidationFailed(errs)
+	}
+
+	return nil
+}
+
+func (this *AccountRepository) CreateAccount(ctx context.Context, param *db.ParamCreateAccount) (*db.Account, error) {
+	if err := validateCreateAccount(ctx, param); err != nil {
+		return nil, err
+	}
+
+	dbParam := mapParamCreateAccount(param)
+
+	row := this.stmtCreateAccount.QueryRowxContext(ctx, dbParam)
+	if row.Err() != nil {
+		return nil, row.Err()
+	}
+
+	resp := db.Account{}
+
+	if err := row.StructScan(&resp); err != nil {
+		return nil, err
+	}
+
+	return &resp, nil
+}
+func (repo *AccountRepository) UpdateAccount(ctx context.Context, param *db.ParamUpdateAccount) (*db.Account, error) {
 	return nil, nil
 }
-func (repo *AccountRepository) UpdateAccount(ctx context.Context, account *db.ParamUpdateAccount) (*db.Account, error) {
-	return nil, nil
-}
-func (repo *AccountRepository) PatchAccount(ctx context.Context, account *db.ParamPatchAccount) (*db.Account, error) {
+func (repo *AccountRepository) PatchAccount(ctx context.Context, param *db.ParamPatchAccount) (*db.Account, error) {
 	return nil, nil
 }
 func (repo *AccountRepository) DeleteAccountByID(ctx context.Context, id string) error {

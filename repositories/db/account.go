@@ -49,7 +49,7 @@ type ParamCreateAccount struct {
 	Username string
 	Email    *string
 	Phone    *string
-	Status   string
+	Status   *string
 }
 
 type ParamUpdateAccount struct {

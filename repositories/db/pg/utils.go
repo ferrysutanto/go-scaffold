@@ -12,12 +12,12 @@ import (
 type Config struct {
 	PrimaryDB *sql.DB
 
-	Host     string
-	Port     uint
-	Username string
-	Password string
-	Database string
-	SslMode  string
+	Host     *string
+	Port     *uint
+	Username *string
+	Password *string
+	Database *string
+	SslMode  *string
 
 	MaxIdleConns *int
 	MaxOpenConns *int
@@ -36,7 +36,7 @@ type Config struct {
 }
 
 func validateConfig(config *Config) error {
-	if config.Host == "" || config.Port == 0 || config.Username == "" || config.Password == "" || config.Database == "" {
+	if config.PrimaryDB == nil && (config.Host == nil || config.Port == nil || config.Username == nil || config.Password == nil || config.Database == nil) {
 		return errors.New("main database configuration is missing required fields")
 	}
 
@@ -77,7 +77,7 @@ func initConnection(config *Config) (write *sqlx.DB, read *sqlx.DB, err error) {
 		// init write connection
 		write, err = sqlx.Connect("postgres",
 			fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
-				config.Host, config.Port, config.Username, config.Password, config.Database, config.SslMode))
+				*config.Host, *config.Port, *config.Username, *config.Password, *config.Database, *config.SslMode))
 		if err != nil {
 			return nil, nil, err
 		}

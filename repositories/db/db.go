@@ -18,7 +18,7 @@ type ITx interface {
 	IProfileTx
 }
 
-var g IGenericDB = ph()
+var g IGenericDB = Placeholder()
 
 func Set(db IGenericDB) {
 	g = db

@@ -11,7 +11,7 @@ var errNotImplemented = errors.NewWithCode("function not implemented", 501)
 // phGenericDB is a placeholder for IGenericDB
 type phGenericDB struct{}
 
-func ph() IGenericDB {
+func Placeholder() IGenericDB {
 	return &phGenericDB{}
 }
 

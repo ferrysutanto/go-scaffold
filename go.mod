@@ -25,6 +25,8 @@ require (
 	go.opentelemetry.io/otel/trace v1.33.0
 )
 
+require github.com/stretchr/objx v0.5.2 // indirect
+
 require (
 	github.com/aws/smithy-go v1.22.1 // indirect
 	github.com/bytedance/sonic v1.11.6 // indirect
