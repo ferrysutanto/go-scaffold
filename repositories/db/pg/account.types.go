@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type createAccount struct {
+type accountEntity struct {
 	ID        string    `db:"id"`
 	Username  string    `db:"username"`
 	Email     *string   `db:"email"`
@@ -18,8 +18,30 @@ type createAccount struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
-func mapParamCreateAccount(param *db.ParamCreateAccount) createAccount {
-	return createAccount{
+func mapAccountEntityToAccount(entity *accountEntity) *db.Account {
+	return &db.Account{
+		ID:        entity.ID,
+		Username:  entity.Username,
+		Email:     entity.Email,
+		Phone:     entity.Phone,
+		Status:    entity.Status,
+		CreatedAt: entity.CreatedAt,
+		UpdatedAt: entity.UpdatedAt,
+	}
+}
+
+type argCreateAccount struct {
+	ID        string    `db:"id"`
+	Username  string    `db:"username"`
+	Email     *string   `db:"email"`
+	Phone     *string   `db:"phone"`
+	Status    string    `db:"status"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
+}
+
+func mapParamCreateAccount(param *db.ParamCreateAccount) argCreateAccount {
+	return argCreateAccount{
 		ID: func() string {
 			log.Println("ID: ", param.ID)
 			if param.ID != nil {

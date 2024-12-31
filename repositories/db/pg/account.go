@@ -85,14 +85,16 @@ func (this *AccountRepository) FindAccountByID(ctx context.Context, id string) (
 		return nil, row.Err()
 	}
 
-	resp := db.Account{}
+	dbResp := accountEntity{}
 
-	err := row.StructScan(&resp)
+	err := row.StructScan(&dbResp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &resp, nil
+	resp := mapAccountEntityToAccount(&dbResp)
+
+	return resp, nil
 }
 
 func validateEmail(email string) bool {
@@ -136,13 +138,15 @@ func (this *AccountRepository) CreateAccount(ctx context.Context, param *db.Para
 		return nil, row.Err()
 	}
 
-	resp := db.Account{}
+	dbResp := accountEntity{}
 
-	if err := row.StructScan(&resp); err != nil {
+	if err := row.StructScan(&dbResp); err != nil {
 		return nil, err
 	}
 
-	return &resp, nil
+	resp := mapAccountEntityToAccount(&dbResp)
+
+	return resp, nil
 }
 func (repo *AccountRepository) UpdateAccount(ctx context.Context, param *db.ParamUpdateAccount) (*db.Account, error) {
 	return nil, nil
