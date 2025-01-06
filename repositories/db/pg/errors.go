@@ -16,8 +16,10 @@ var (
 	ErrEmailOrPhoneRequired = errors.New("either email or phone is required")
 	ErrInvalidEmail         = errors.New("invalid email")
 	ErrInvalidPhone         = errors.New("invalid phone")
-)
+	ErrAccountNotFound      = errors.New("account not found")
 
-var (
-	ErrAccountNotFound = errors.New("account not found")
+	ErrNoFieldToUpdate = errors.New("no field to update")
+
+	ErrUnexpected    = errors.New("unexpected error")
+	ErrUnimplemented = errors.New("unimplemented")
 )

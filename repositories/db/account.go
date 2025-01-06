@@ -10,7 +10,7 @@ type IAccountRepository interface {
 	FindAccountByID(ctx context.Context, id string) (*Account, error)
 	CreateAccount(ctx context.Context, account *ParamCreateAccount) (*Account, error)
 	UpdateAccount(ctx context.Context, account *ParamUpdateAccount) (*Account, error)
-	PatchAccount(ctx context.Context, account *ParamPatchAccount) (*Account, error)
+	PatchAccount(ctx context.Context, account *ParamPatchAccount) error
 	DeleteAccountByID(ctx context.Context, id string) error
 
 	BeginTx(ctx context.Context) (IAccountTx, error)
@@ -22,7 +22,7 @@ type IAccountTx interface {
 
 	CreateAccount(ctx context.Context, account *ParamCreateAccount) (*Account, error)
 	UpdateAccount(ctx context.Context, account *ParamUpdateAccount) (*Account, error)
-	PatchAccount(ctx context.Context, account *ParamPatchAccount) (*Account, error)
+	PatchAccount(ctx context.Context, account *ParamPatchAccount) error
 	DeleteAccountByID(ctx context.Context, id string) error
 }
 

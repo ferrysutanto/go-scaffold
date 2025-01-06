@@ -12,7 +12,7 @@ import (
 )
 
 func UT_AccountRepository_CreateAccount(t *testing.T) {
-	// instantiate the mocked repository
+	// instantiate the mocked repository every time the test runs
 	accRepo, writeMock, _, err := newMockAccountRepository()
 	if err != nil {
 		require.NoError(t, err)

@@ -59,12 +59,21 @@ func randomAccStatus() string {
 	return accStatus[rand.Intn(len(accStatus))] // Pick a random status
 }
 
-func createRandomAccount() *db.Account {
+type RandAccOpt struct {
+	Phone *string
+}
+
+func createRandomAccount(opt *RandAccOpt) *db.Account {
 	return &db.Account{
-		ID:        faker.UUIDHyphenated(),
-		Username:  faker.Username(),
-		Email:     aws.String(faker.Email()),
-		Phone:     aws.String(faker.Phonenumber()),
+		ID:       faker.UUIDHyphenated(),
+		Username: faker.Username(),
+		Email:    aws.String(faker.Email()),
+		Phone: func() *string {
+			if opt != nil && opt.Phone != nil {
+				return opt.Phone
+			}
+			return aws.String(faker.E164PhoneNumber())
+		}(),
 		Status:    randomAccStatus(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
@@ -95,12 +104,6 @@ func accToArrDV(acc *db.Account) []driver.Value {
 	}
 }
 
-func createRandomAccounts(i int) []*db.Account {
-	var accounts []*db.Account
-	for j := 0; j < i; j++ {
-		accounts = append(accounts, createRandomAccount())
-	}
-	return accounts
+var accList = []*db.Account{
+	createRandomAccount(&RandAccOpt{Phone: aws.String("+6281234567890")}),
 }
-
-var accList = createRandomAccounts(10)

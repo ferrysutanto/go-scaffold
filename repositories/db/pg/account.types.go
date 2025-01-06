@@ -62,3 +62,23 @@ func mapParamCreateAccount(param *db.ParamCreateAccount) argCreateAccount {
 		UpdatedAt: time.Now(),
 	}
 }
+
+type argUpdateAccount struct {
+	ID        string    `db:"id"`
+	Username  string    `db:"username"`
+	Email     *string   `db:"email,omitempty"`
+	Phone     *string   `db:"phone,omitempty"`
+	Status    string    `db:"status"`
+	UpdatedAt time.Time `db:"updated_at"`
+}
+
+func mapParamUpdateAccount(param *db.ParamUpdateAccount) argUpdateAccount {
+	return argUpdateAccount{
+		ID:        param.ID,
+		Username:  param.Username,
+		Email:     param.Email,
+		Phone:     param.Phone,
+		Status:    param.Status,
+		UpdatedAt: time.Now(),
+	}
+}

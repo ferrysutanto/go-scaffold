@@ -20,8 +20,8 @@ func (*phAccDB) UpdateAccount(ctx context.Context, acc *ParamUpdateAccount) (*Ac
 	return nil, errNotImplemented
 }
 
-func (*phAccDB) PatchAccount(ctx context.Context, acc *ParamPatchAccount) (*Account, error) {
-	return nil, errNotImplemented
+func (*phAccDB) PatchAccount(ctx context.Context, acc *ParamPatchAccount) error {
+	return errNotImplemented
 }
 
 func (*phAccDB) DeleteAccountByID(ctx context.Context, id string) error {
@@ -50,8 +50,8 @@ func (*phAccTx) UpdateAccount(ctx context.Context, acc *ParamUpdateAccount) (*Ac
 	return nil, errNotImplemented
 }
 
-func (*phAccTx) PatchAccount(ctx context.Context, acc *ParamPatchAccount) (*Account, error) {
-	return nil, errNotImplemented
+func (*phAccTx) PatchAccount(ctx context.Context, acc *ParamPatchAccount) error {
+	return errNotImplemented
 }
 
 func (*phAccTx) DeleteAccountByID(ctx context.Context, id string) error {
