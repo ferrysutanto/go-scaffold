@@ -67,9 +67,9 @@ func validateConfig(config *Config) error {
 }
 
 func initConnection(config *Config) (write *sqlx.DB, read *sqlx.DB, err error) {
-	// if err := validateConfig(config); err != nil {
-	// 	return nil, nil, err
-	// }
+	if err := validateConfig(config); err != nil {
+		return nil, nil, err
+	}
 
 	if config.PrimaryDB != nil {
 		write = sqlx.NewDb(config.PrimaryDB, "postgres")

@@ -8,9 +8,9 @@ import (
 type IAccountRepository interface {
 	GetAccounts(ctx context.Context, param *ParamGetAccounts) (*Accounts, error)
 	FindAccountByID(ctx context.Context, id string) (*Account, error)
-	CreateAccount(ctx context.Context, account *ParamCreateAccount) (*Account, error)
-	UpdateAccount(ctx context.Context, account *ParamUpdateAccount) (*Account, error)
-	PatchAccount(ctx context.Context, account *ParamPatchAccount) error
+	CreateAccount(ctx context.Context, param *ParamCreateAccount) (*Account, error)
+	UpdateAccount(ctx context.Context, param *ParamUpdateAccount) (*Account, error)
+	PatchAccount(ctx context.Context, param *ParamPatchAccount) error
 	DeleteAccountByID(ctx context.Context, id string) error
 
 	BeginTx(ctx context.Context) (IAccountTx, error)
@@ -20,9 +20,9 @@ type IAccountTx interface {
 	Commit(ctx context.Context) error
 	Rollback(ctx context.Context) error
 
-	CreateAccount(ctx context.Context, account *ParamCreateAccount) (*Account, error)
-	UpdateAccount(ctx context.Context, account *ParamUpdateAccount) (*Account, error)
-	PatchAccount(ctx context.Context, account *ParamPatchAccount) error
+	CreateAccount(ctx context.Context, param *ParamCreateAccount) (*Account, error)
+	UpdateAccount(ctx context.Context, param *ParamUpdateAccount) (*Account, error)
+	PatchAccount(ctx context.Context, param *ParamPatchAccount) error
 	DeleteAccountByID(ctx context.Context, id string) error
 }
 

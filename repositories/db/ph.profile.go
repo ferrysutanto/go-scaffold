@@ -20,8 +20,8 @@ func (*phProfDB) UpdateProfile(ctx context.Context, acc *ParamUpdateProfile) (*P
 	return nil, errNotImplemented
 }
 
-func (*phProfDB) PatchProfile(ctx context.Context, acc *ParamPatchProfile) (*Profile, error) {
-	return nil, errNotImplemented
+func (*phProfDB) PatchProfile(ctx context.Context, acc *ParamPatchProfile) error {
+	return errNotImplemented
 }
 
 func (*phProfDB) DeleteProfileByID(ctx context.Context, id string) error {
@@ -50,8 +50,8 @@ func (*phProfTx) UpdateProfile(ctx context.Context, acc *ParamUpdateProfile) (*P
 	return nil, errNotImplemented
 }
 
-func (*phProfTx) PatchProfile(ctx context.Context, acc *ParamPatchProfile) (*Profile, error) {
-	return nil, errNotImplemented
+func (*phProfTx) PatchProfile(ctx context.Context, acc *ParamPatchProfile) error {
+	return errNotImplemented
 }
 
 func (*phProfTx) DeleteProfileByID(ctx context.Context, id string) error {

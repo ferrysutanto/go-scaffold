@@ -2,29 +2,7 @@ package services
 
 import (
 	"context"
-	"log"
-
-	"github.com/ferrysutanto/go-scaffold/config"
-	"github.com/ferrysutanto/go-scaffold/repositories/db"
 )
-
-func init() {
-	ctx := context.Background()
-
-	cfg := config.Get()
-
-	svc, err := New(ctx, &Config{
-		Env: cfg.Env,
-		DB: &DbConfig{
-			DB: db.Get(),
-		},
-	})
-	if err != nil {
-		log.Fatalln("failed to init default service. terminating...")
-	}
-
-	Set(svc)
-}
 
 var g IService = placeholder()
 

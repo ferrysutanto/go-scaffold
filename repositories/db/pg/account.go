@@ -26,6 +26,10 @@ type AccountRepository struct {
 }
 
 func NewAccountRepository(ctx context.Context, config *Config) (db.IAccountRepository, error) {
+	return newAccountRepository(ctx, config)
+}
+
+func newAccountRepository(ctx context.Context, config *Config) (*AccountRepository, error) {
 	write, read, err := initConnection(config)
 	if err != nil {
 		return nil, err
@@ -41,7 +45,7 @@ func NewAccountRepository(ctx context.Context, config *Config) (db.IAccountRepos
 		return nil, err
 	}
 
-	stmtUpdateAccount, err := write.PrepareNamedContext(ctx, "UPDATE accounts SET username = :username, email = :email, phone = :phone, status = :status WHERE id = :id RETURNING id, username, email, phone, status, created_at, updated_at")
+	stmtUpdateAccount, err := write.PrepareNamedContext(ctx, "UPDATE accounts SET username = :username, email = :email, phone = :phone, status = :status, updated_at = :updated_at WHERE id = :id RETURNING id, username, email, phone, status, created_at, updated_at")
 	if err != nil {
 		return nil, err
 	}
@@ -307,10 +311,13 @@ func (this *AccountRepository) DeleteAccountByID(ctx context.Context, id string)
 	return nil
 }
 
-func (this *AccountRepository) BeginTx(ctx context.Context) (db.IAccountTx, error) {
-	tx, err := this.prim.BeginTxx(ctx, nil)
-	if err != nil {
-		return nil, err
+func (this *AccountRepository) beginTx(ctx context.Context, tx *sqlx.Tx) (db.IAccountTx, error) {
+	if tx == nil {
+		var err error
+		tx, err = this.prim.BeginTxx(ctx, nil)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	stmtFindAccountByID, err := tx.PrepareNamedContext(ctx, "SELECT id, username, email, phone, status, created_at, updated_at FROM accounts WHERE id = :id")
@@ -341,6 +348,10 @@ func (this *AccountRepository) BeginTx(ctx context.Context) (db.IAccountTx, erro
 		stmtUpdateAccount:     stmtUpdateAccount,
 		stmtDeleteAccountByID: stmtDeleteAccountByID,
 	}, nil
+}
+
+func (this *AccountRepository) BeginTx(ctx context.Context) (db.IAccountTx, error) {
+	return this.beginTx(ctx, nil)
 }
 
 type AccountTx struct {

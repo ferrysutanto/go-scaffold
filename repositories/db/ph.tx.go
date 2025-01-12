@@ -18,8 +18,8 @@ func (*txImpl) CreateAccount(ctx context.Context, account *ParamCreateAccount) (
 func (*txImpl) UpdateAccount(ctx context.Context, account *ParamUpdateAccount) (*Account, error) {
 	return nil, errNotImplemented
 }
-func (*txImpl) PatchAccount(ctx context.Context, account *ParamPatchAccount) (*Account, error) {
-	return nil, errNotImplemented
+func (*txImpl) PatchAccount(ctx context.Context, account *ParamPatchAccount) error {
+	return errNotImplemented
 }
 func (*txImpl) DeleteAccountByID(ctx context.Context, id string) error {
 	return errNotImplemented
@@ -31,8 +31,8 @@ func (*txImpl) CreateProfile(ctx context.Context, account *ParamCreateProfile) (
 func (*txImpl) UpdateProfile(ctx context.Context, account *ParamUpdateProfile) (*Profile, error) {
 	return nil, errNotImplemented
 }
-func (*txImpl) PatchProfile(ctx context.Context, account *ParamPatchProfile) (*Profile, error) {
-	return nil, errNotImplemented
+func (*txImpl) PatchProfile(ctx context.Context, account *ParamPatchProfile) error {
+	return errNotImplemented
 }
 func (*txImpl) DeleteProfileByID(ctx context.Context, id string) error {
 	return errNotImplemented

@@ -8,9 +8,9 @@ import (
 type IProfileRepository interface {
 	GetProfiles(ctx context.Context, param *ParamGetProfiles) (*Profiles, error)
 	FindProfileByID(ctx context.Context, id string) (*Profile, error)
-	CreateProfile(ctx context.Context, account *ParamCreateProfile) (*Profile, error)
-	UpdateProfile(ctx context.Context, account *ParamUpdateProfile) (*Profile, error)
-	PatchProfile(ctx context.Context, account *ParamPatchProfile) (*Profile, error)
+	CreateProfile(ctx context.Context, param *ParamCreateProfile) (*Profile, error)
+	UpdateProfile(ctx context.Context, param *ParamUpdateProfile) (*Profile, error)
+	PatchProfile(ctx context.Context, param *ParamPatchProfile) error
 	DeleteProfileByID(ctx context.Context, id string) error
 
 	BeginTx(ctx context.Context) (IProfileTx, error)
@@ -20,9 +20,9 @@ type IProfileTx interface {
 	Commit(ctx context.Context) error
 	Rollback(ctx context.Context) error
 
-	CreateProfile(ctx context.Context, account *ParamCreateProfile) (*Profile, error)
-	UpdateProfile(ctx context.Context, account *ParamUpdateProfile) (*Profile, error)
-	PatchProfile(ctx context.Context, account *ParamPatchProfile) (*Profile, error)
+	CreateProfile(ctx context.Context, param *ParamCreateProfile) (*Profile, error)
+	UpdateProfile(ctx context.Context, param *ParamUpdateProfile) (*Profile, error)
+	PatchProfile(ctx context.Context, param *ParamPatchProfile) error
 	DeleteProfileByID(ctx context.Context, id string) error
 }
 

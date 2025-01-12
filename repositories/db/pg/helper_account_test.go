@@ -17,7 +17,7 @@ import (
 const (
 	accQueryFindByID = "SELECT id, username, email, phone, status, created_at, updated_at FROM accounts WHERE"
 	accQueryInsert   = `INSERT INTO accounts \(id, username, email, phone, status, created_at, updated_at\) VALUES \(\$1, \$2, \$3, \$4, \$5, \$6, \$7\) RETURNING id, username, email, phone, status, created_at, updated_at`
-	accQueryUpdate   = `UPDATE accounts SET username = \$1, email = \$2, phone = \$3, status = \$4 WHERE id = \$5 RETURNING id, username, email, phone, status, created_at, updated_at`
+	accQueryUpdate   = `UPDATE accounts SET username = \$1, email = \$2, phone = \$3, status = \$4, updated_at = \$5 WHERE id = \$6 RETURNING id, username, email, phone, status, created_at, updated_at`
 	accQueryDelete   = `DELETE FROM accounts WHERE id = \$1`
 )
 
@@ -63,7 +63,7 @@ type RandAccOpt struct {
 	Phone *string
 }
 
-func createRandomAccount(opt *RandAccOpt) *db.Account {
+func crtRandDbAcc(opt *RandAccOpt) *db.Account {
 	return &db.Account{
 		ID:       faker.UUIDHyphenated(),
 		Username: faker.Username(),
@@ -80,7 +80,8 @@ func createRandomAccount(opt *RandAccOpt) *db.Account {
 	}
 }
 
-func argAccToArrDV(acc *db.Account) []driver.Value {
+// mapping account to argument for create account, order/sequence is important
+func dbAccToArgCrtAccADV(acc *db.Account) []driver.Value {
 	return []driver.Value{
 		acc.ID,
 		acc.Username,
@@ -92,7 +93,19 @@ func argAccToArrDV(acc *db.Account) []driver.Value {
 	}
 }
 
-func accToArrDV(acc *db.Account) []driver.Value {
+// mapping account to argument for update account, order/sequence is important
+func dbAccToArgUpdAccADV(acc *db.Account) []driver.Value {
+	return []driver.Value{
+		acc.Username,
+		acc.Email,
+		acc.Phone,
+		acc.Status,
+		sqlmock.AnyArg(),
+		acc.ID,
+	}
+}
+
+func dbAccToADV(acc *db.Account) []driver.Value {
 	return []driver.Value{
 		acc.ID,
 		acc.Username,
@@ -105,5 +118,5 @@ func accToArrDV(acc *db.Account) []driver.Value {
 }
 
 var accList = []*db.Account{
-	createRandomAccount(&RandAccOpt{Phone: aws.String("+6281234567890")}),
+	crtRandDbAcc(&RandAccOpt{Phone: aws.String("+6281234567890")}),
 }

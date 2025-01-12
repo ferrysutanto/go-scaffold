@@ -48,8 +48,8 @@ type DbConfig struct {
 	// DriverName is the name of the database driver and it's mandatory
 	DriverName string `json:"driver_name" yaml:"driver_name" validate:"required"`
 
-	// You can supply either an sql.DB object or config of the database connection, but not both (mutually exclusive)
-	DB db.IGenericDB
+	// You can supply either an sql.GenericDB object or config of the database connection, but not both (mutually exclusive)
+	GenericDB db.IGenericDB
 
 	RDBMSConfig *RDBMSConfig
 }
