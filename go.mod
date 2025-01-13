@@ -6,7 +6,7 @@ toolchain go1.22.10
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
-	github.com/aws/aws-sdk-go-v2 v1.32.7
+	github.com/aws/aws-sdk-go-v2 v1.32.8
 	github.com/ferrysutanto/go-errors v1.0.4
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-playground/validator/v10 v10.23.0
@@ -24,8 +24,6 @@ require (
 	go.opentelemetry.io/otel/sdk v1.33.0
 	go.opentelemetry.io/otel/trace v1.33.0
 )
-
-require github.com/stretchr/objx v0.5.2 // indirect
 
 require (
 	github.com/aws/smithy-go v1.22.1 // indirect
