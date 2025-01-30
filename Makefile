@@ -34,6 +34,13 @@ api/build_image:
 api/run_container:
 	docker run --env-file=.env -p ${DOCKER_API_HOST_PORT}:${APP_PORT} ${DOCKER_API_IMAGE_NAME}
 
+# Lambda Section
+pre-signup/build:
+	go build -o bin/pre-signup build/workers/cognito/pre_signup/main.go
+
+pre-signup/build-image:
+	docker build -t ${DOCKER_COGNITO_PRE_SIGNUP_IMAGE_NAME} -f build/workers/cognito/pre_signup/Dockerfile .
+
 # CLI Section
 cli/build:
 	go build -o bin/cli build/cli/main.go

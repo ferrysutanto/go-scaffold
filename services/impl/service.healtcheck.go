@@ -1,4 +1,4 @@
-package services
+package impl
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"go.opentelemetry.io/otel"
 )
 
-func (s *srvImpl) Healthcheck(ctx context.Context) error {
+func (this *srvImpl) Healthcheck(ctx context.Context) error {
 	// 1. validate context
 	if ctx == nil {
 		return errors.NewWithCode("context is required", 400)
@@ -18,7 +18,7 @@ func (s *srvImpl) Healthcheck(ctx context.Context) error {
 	defer span.End()
 
 	// 3. validate model
-	if err := s.db.Ping(ctx); err != nil {
+	if err := this.db.Ping(ctx); err != nil {
 		err = errors.WrapWithCode(err, "failed to ping the service", 500)
 		span.RecordError(err)
 		return err

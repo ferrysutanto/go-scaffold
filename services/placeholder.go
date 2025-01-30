@@ -2,19 +2,25 @@ package services
 
 import (
 	"context"
-
-	"github.com/ferrysutanto/go-errors"
 )
 
-var errNotImplemented = errors.NewWithCode("function not implemented", 501)
-
-type svcPlaceholder struct{}
+type svcPH struct{}
 
 func placeholder() IService {
-	return &svcPlaceholder{}
+	return &svcPH{}
 }
 
 // Healthcheck empty placeholder
-func (*svcPlaceholder) Healthcheck(ctx context.Context) error {
-	return errNotImplemented
+func (*svcPH) Healthcheck(ctx context.Context) error {
+	return ErrNotImplemented
+}
+
+// RecordSignup empty placeholder
+func (*svcPH) RecordSignup(ctx context.Context, param *ParamRecordSignup) (*RespRecordSignup, error) {
+	return nil, ErrNotImplemented
+}
+
+// DeleteAccount empty placeholder
+func (*svcPH) DeleteAccount(ctx context.Context, param *ParamRequestAccountDeletion) error {
+	return ErrNotImplemented
 }

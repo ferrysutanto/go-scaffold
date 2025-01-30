@@ -6,6 +6,15 @@ import (
 	"github.com/ferrysutanto/go-scaffold/repositories/db"
 )
 
+func NewDB() *DB {
+	return &DB{
+		pingExps:    make([]*pingExp, 0),
+		beginTxExps: make([]*beginTxExp, 0),
+		accountExps: make([]*accountExp, 0),
+		profileExps: make([]*profileExp, 0),
+	}
+}
+
 type DB struct {
 	pingExps    []*pingExp
 	beginTxExps []*beginTxExp

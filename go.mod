@@ -28,6 +28,7 @@ require (
 require github.com/stretchr/objx v0.5.2 // indirect
 
 require (
+	github.com/aws/aws-lambda-go v1.47.0
 	github.com/aws/smithy-go v1.22.1 // indirect
 	github.com/bytedance/sonic v1.11.6 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect

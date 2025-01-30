@@ -8,7 +8,7 @@ COPY . .
 RUN go mod download
 
 # Build the Go binary for arm64
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o ./cognito-pre-signup ./build/workers/cognito/pre_signup/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o ./cognito-post-signup ./build/workers/cognito/post_signup/main.go
 
 # Stage 2: Create the final Docker image
 FROM alpine:latest
@@ -16,9 +16,9 @@ FROM alpine:latest
 WORKDIR /app
 
 # Copy the Go binary from the builder stage
-COPY --from=builder /app/cognito-pre-signup /app/
+COPY --from=builder /app/cognito-post-signup /app/
 
 # Set any other necessary configurations or dependencies
 
 # Set the binary as the entrypoint
-ENTRYPOINT [ "./cognito-pre-signup" ]
+ENTRYPOINT [ "./cognito-post-signup" ]

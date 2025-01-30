@@ -1,4 +1,4 @@
-package services
+package impl
 
 import (
 	"context"
@@ -12,6 +12,7 @@ import (
 	"github.com/ferrysutanto/go-scaffold/repositories/cache"
 	"github.com/ferrysutanto/go-scaffold/repositories/db"
 	"github.com/ferrysutanto/go-scaffold/repositories/db/pg"
+	"github.com/ferrysutanto/go-scaffold/services"
 )
 
 type srvImpl struct {
@@ -31,7 +32,7 @@ func validateConfig(ctx context.Context, cfg *Config) error {
 	return nil
 }
 
-func New(ctx context.Context, cfg *Config) (IService, error) {
+func New(ctx context.Context, cfg *Config) (services.IService, error) {
 	if err := validateConfig(ctx, cfg); err != nil {
 		return nil, err
 	}
@@ -66,21 +67,21 @@ func New(ctx context.Context, cfg *Config) (IService, error) {
 			case "postgres", "pg":
 				var err error
 				resp.db, err = pg.New(ctx, &pg.Config{
-					PrimaryDB: cfg.DB.RDBMSConfig.DbClient.DB,
-					Host:      cfg.DB.RDBMSConfig.Host,
-					Port:      cfg.DB.RDBMSConfig.Port,
-					Username:  cfg.DB.RDBMSConfig.Username,
-					Password:  cfg.DB.RDBMSConfig.Password,
-					Database:  cfg.DB.RDBMSConfig.Name,
-					SslMode:   cfg.DB.RDBMSConfig.SslMode,
+					PrimaryDB: cfg.DB.RdbmsConfig.DbClient.DB,
+					Host:      cfg.DB.RdbmsConfig.Host,
+					Port:      cfg.DB.RdbmsConfig.Port,
+					Username:  cfg.DB.RdbmsConfig.Username,
+					Password:  cfg.DB.RdbmsConfig.Password,
+					Database:  cfg.DB.RdbmsConfig.Name,
+					SslMode:   cfg.DB.RdbmsConfig.SslMode,
 
-					ReplicaDB:       cfg.DB.RDBMSConfig.ReplicaDbClient.DB,
-					ReplicaHost:     cfg.DB.RDBMSConfig.ReplicaHost,
-					ReplicaPort:     cfg.DB.RDBMSConfig.ReplicaPort,
-					ReplicaUsername: cfg.DB.RDBMSConfig.ReplicaUsername,
-					ReplicaPassword: cfg.DB.RDBMSConfig.ReplicaPassword,
-					ReplicaDatabase: cfg.DB.RDBMSConfig.ReplicaName,
-					ReplicaSslMode:  cfg.DB.RDBMSConfig.ReplicaSslMode,
+					ReplicaDB:       cfg.DB.RdbmsConfig.ReplicaDbClient.DB,
+					ReplicaHost:     cfg.DB.RdbmsConfig.ReplicaHost,
+					ReplicaPort:     cfg.DB.RdbmsConfig.ReplicaPort,
+					ReplicaUsername: cfg.DB.RdbmsConfig.ReplicaUsername,
+					ReplicaPassword: cfg.DB.RdbmsConfig.ReplicaPassword,
+					ReplicaDatabase: cfg.DB.RdbmsConfig.ReplicaName,
+					ReplicaSslMode:  cfg.DB.RdbmsConfig.ReplicaSslMode,
 				})
 				if err != nil {
 					return nil, err
