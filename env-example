@@ -5,6 +5,17 @@
 # APP_ENV=dev # env: dev, test, stage, prod
 # APP_DEBUG=true # APP_DEBUG should be set to false in production
 
+# AWS_REGION=us-east-1
+# AWS_ACCOUNT_ID=123456789012
+
+# LAMBDA_COGNITO_PRE_SIGNUP_FUNCTION_NAME=go-scaffold-cognito-pre-signup
+# LAMBDA_COGNITO_POST_CONFIRMATION_FUNCTION_NAME=go-scaffold-cognito-post-confirmation
+# LAMBDA_COGNITO_POST_AUTHENTICATION_FUNCTION_NAME=go-scaffold-cognito-post-authentication
+
+# DOCKER_COGNITO_PRE_SIGNUP_IMAGE_NAME=go-scaffold-cognito-pre-signup
+# DOCKER_COGNITO_POST_CONFIRMATION_IMAGE_NAME=go-scaffold-cognito-post-confirmation
+# DOCKER_COGNITO_POST_AUTHENTICATION_IMAGE_NAME=go-scaffold-cognito-post-authentication
+
 # DATABASE SECTION (supported: postgres, dynamodb/ddb)
 # DB_DRIVER=postgres
 

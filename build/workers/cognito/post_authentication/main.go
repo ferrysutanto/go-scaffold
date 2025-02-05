@@ -8,32 +8,32 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-// payload is the event payload for the pre-signup trigger
 type payload struct {
 	Version       string `json:"version"`
 	Region        string `json:"region"`
-	UserPoolID    string `json:"userPoolId"`
+	UserPoolId    string `json:"userPoolId"`
 	UserName      string `json:"userName"`
 	CallerContext struct {
 		AwsSdkVersion string `json:"awsSdkVersion"`
-		ClientID      string `json:"clientId"`
+		ClientId      string `json:"clientId"`
 	} `json:"callerContext"`
 	TriggerSource string `json:"triggerSource"`
 	Request       struct {
 		UserAttributes struct {
-			Email string `json:"email"`
+			Sub           string `json:"sub"`
+			EmailVerified string `json:"email_verified"`
+			CognitoUser   string `json:"cognito:user_status"`
+			GivenName     string `json:"given_name"`
+			FamilyName    string `json:"family_name"`
+			Email         string `json:"email"`
 		} `json:"userAttributes"`
-		ValidationData map[string]interface{} `json:"validationData"`
+		NewDeviceUsed bool `json:"newDeviceUsed"`
 	} `json:"request"`
-	Response struct {
-		AutoConfirmUser bool `json:"autoConfirmUser"`
-		AutoVerifyEmail bool `json:"autoVerifyEmail"`
-		AutoVerifyPhone bool `json:"autoVerifyPhone"`
-	}
+	Response map[string]interface{} `json:"response"`
 }
 
 func handleRequest(ctx context.Context, event json.RawMessage) (json.RawMessage, error) {
-	log.Println("Processing pre-signup event")
+	log.Println("Processing post-authentication event")
 
 	log.Println("Event: ", string(event))
 

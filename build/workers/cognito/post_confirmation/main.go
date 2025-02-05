@@ -8,7 +8,6 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-// payload is the event payload for the pre-signup trigger
 type payload struct {
 	Version       string `json:"version"`
 	Region        string `json:"region"`
@@ -21,19 +20,19 @@ type payload struct {
 	TriggerSource string `json:"triggerSource"`
 	Request       struct {
 		UserAttributes struct {
-			Email string `json:"email"`
+			Sub               string `json:"sub"`
+			EmailVerified     string `json:"email_verified"`
+			CognitoUserStatus string `json:"cognito:user_status"`
+			GivenName         string `json:"given_name"`
+			FamilyName        string `json:"family_name"`
+			Email             string `json:"email"`
 		} `json:"userAttributes"`
-		ValidationData map[string]interface{} `json:"validationData"`
 	} `json:"request"`
-	Response struct {
-		AutoConfirmUser bool `json:"autoConfirmUser"`
-		AutoVerifyEmail bool `json:"autoVerifyEmail"`
-		AutoVerifyPhone bool `json:"autoVerifyPhone"`
-	}
+	Response map[string]interface{} `json:"response"`
 }
 
 func handleRequest(ctx context.Context, event json.RawMessage) (json.RawMessage, error) {
-	log.Println("Processing pre-signup event")
+	log.Println("Processing post-confirmation event")
 
 	log.Println("Event: ", string(event))
 
