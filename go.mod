@@ -24,6 +24,8 @@ require (
 	go.opentelemetry.io/otel/trace v1.34.0
 )
 
+require golang.org/x/exp v0.0.0-20240525044651-4c93da0ed11d // indirect
+
 require (
 	github.com/aws/aws-lambda-go v1.47.0
 	github.com/aws/smithy-go v1.22.2 // indirect
@@ -51,7 +53,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/nyaruka/phonenumbers v1.4.4
+	github.com/nyaruka/phonenumbers v1.5.0
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
